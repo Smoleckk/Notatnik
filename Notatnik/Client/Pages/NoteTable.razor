@@ -1,0 +1,81 @@
+﻿@page "/notes"
+@using Notatnik.Server
+@using Notatnik.Shared
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@attribute [Authorize]
+
+@*<h1>Notes</h1>
+
+@foreach (var n in notes)
+{
+    <h1>@n.NoteId  @n.Title</h1>
+    <h1></h1>
+
+}*@
+<RadzenCard>
+    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">ListBox</RadzenText>
+    <RadzenListBox @bind-Value=@value Data=@notes TextProperty="Title" ValueProperty="NoteId" Change=@OnChange Style="height:200px" Class="w-100" />
+</RadzenCard>
+@if (isSecure)
+{
+    <RadzenCard>
+        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Password with placeholder</RadzenText>
+        <RadzenPassword Placeholder="Enter password..." @bind-Value=@password Change=@(args => OnChange2(args, "Password with placeholder")) Class="w-100" />
+    </RadzenCard>
+}
+<RadzenButton Click=@getNoteDetails Text="Primary" ButtonStyle="ButtonStyle.Primary" />
+
+
+<h1>@note.Title</h1>
+<h1>@note.Body</h1>
+
+
+@code {
+    int value = 0;
+    string password = "";
+    bool isSecure = false;
+    List<NoteDisplayDto> notes = new List<NoteDisplayDto>();
+    Note note = new Note();
+    protected override async Task OnInitializedAsync()
+    {
+
+        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note");
+
+
+    }
+    void checkPassNeed()
+    {
+        if (notes.FirstOrDefault(i => i.NoteId == value).Secure)
+        {
+            isSecure = true;
+        }
+        else
+        {
+            isSecure = false;
+            password = "";
+        }
+    }
+
+    async Task getNoteDetails()
+    {
+        if (password == "")
+            password = "dummy pass";
+        note = await Http.GetFromJsonAsync<Note>($"https://localhost:7288/api/User/id?id={value}&password={password}");
+        Console.WriteLine(note.Body);
+        isSecure = false;
+        password = "";
+
+    }
+
+    void OnChange()
+    {
+        Console.WriteLine(value);
+        //NavManager.NavigateTo($"/invoice-data");
+        checkPassNeed();
+    }
+    void OnChange2(string value, string name)
+    {
+        Console.WriteLine(password);
+    }
+}
