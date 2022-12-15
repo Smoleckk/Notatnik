@@ -1,0 +1,31 @@
+﻿@page "/public-notes"
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@attribute [Authorize]
+
+<h1>Public notes</h1>
+
+
+@if (notes != null)
+{
+    @foreach (var n in notes)
+    {
+        <RadzenCard>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@n.Title</RadzenText>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@((MarkupString)n.Body)</RadzenText>
+            </RadzenCard>
+    }
+}
+
+
+
+@code {
+
+    List<NoteDisplayDto> notes = new List<NoteDisplayDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note");
+    }
+}

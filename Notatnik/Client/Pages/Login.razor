@@ -1,11 +1,91 @@
 ﻿@page "/login"
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
 @inject ILocalStorageService LocalStorage
 @using Notatnik.Server
 @using Notatnik.Shared
 
-<h1>Login</h1>
+
+@using Radzen
+@using System.Text.Json
+
+<div class="container my-4">
+
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+            <RadzenTemplateForm TItem="UserDto" Data=@user Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+                <RadzenFieldset Text="Personal information">
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="First Name" />
+                        </div>
+                        <div class="col">
+                            <RadzenTextBox style="display: block" Name="Username" @bind-Value=@user.Username Class="w-100" />
+                            <RadzenRequiredValidator Component="Username" Text="First name is required" Popup=true Style="position: absolute" />
+                            <RadzenRegexValidator Component="Username" Text="You can only use a-z letters" Pattern="^[a-zA-Z]+$" Popup=true Style="position: absolute" />
+                            <RadzenLengthValidator Component="Username" Min="3" Text="First name should be at least 3 characters" Popup=true Style="position: absolute" />
+                            <RadzenLengthValidator Component="Username" Max="10" Text="First name should be at most 10 characters" Popup=true Style="position: absolute" />
+                        </div>
+                    </div>
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Last Name" />
+                        </div>
+                        <div class="col">
+                            <RadzenPassword style="display: block" Name="Password" @bind-Value=@user.Password Class="w-100" />
+                            <RadzenRequiredValidator Component="Password" Text="Password is required" Popup=true Style="position: absolute" />
+                        </div>
+                    </div>
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
+                </RadzenFieldset>
+            </RadzenTemplateForm>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    UserDto user = new UserDto();
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.Name != null)
+        {
+            NavigationManager.NavigateTo($"/home");
+
+        }
+    }
+
+    async Task OnSubmit()
+    {
+        var result = await Http.PostAsJsonAsync("api/auth/login", user);
+        var token = await result.Content.ReadAsStringAsync();
+        Console.WriteLine(token);
+        if (token != "Bad Credentials")
+        {
+            await LocalStorage.SetItemAsync("token", token);
+            await AuthStateProvider.GetAuthenticationStateAsync();
+
+        }
+    }
+    void Log(string eventName, string value)
+    {
+        //Console.WriteLine($"{eventName}: {value}");
+    }
+    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+    {
+        //Log("InvalidSubmit", JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true }));
+    }
+}
+
+@*<h1>Login</h1>
 <EditForm Model="user" OnSubmit="HandleLogin">
     <label for="username">Name</label>
     <InputText id="username" @bind-Value="user.Username" />
@@ -17,6 +97,17 @@
 @code {
     UserDto user = new UserDto();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.Name != null)
+        {
+            NavigationManager.NavigateTo($"/");
+
+        }
+    }
     async Task HandleLogin()
     {
         var result = await Http.PostAsJsonAsync("api/auth/login", user);
@@ -30,3 +121,4 @@
 
     }
 }
+*@

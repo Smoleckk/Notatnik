@@ -27,5 +27,25 @@ namespace Notatnik.Server.Controllers
             }
             return Ok(response.Data.ToArray());
         }
+        [HttpGet("notes-by-user")]
+        public async Task<ActionResult<List<NoteDisplayDto>>> GetNotesByUser(string username)
+        {
+            var response = await _noteService.GetNotesByUser(username);
+            if (!response.Success)
+            {
+                return NotFound();
+            }
+            return Ok(response.Data.ToArray());
+        }
+        [HttpGet("note-by-user")]
+        public async Task<ActionResult<NoteDisplayDto>> GetNote(int id, string notePassword, string username)
+        {
+            var response = await _noteService.GetNoteDetails(id, notePassword, username);
+            if (!response.Success)
+            {
+                return NotFound(response.Message);
+            }
+            return Ok(response.Data);
+        }
     }
 }

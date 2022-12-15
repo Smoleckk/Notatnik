@@ -2,6 +2,7 @@
 using Notatnik.Server.Data;
 using Notatnik.Shared;
 using System.Security.Cryptography;
+using static Azure.Core.HttpHeader;
 
 namespace Notatnik.Server.Services.UserService
 {
@@ -81,6 +82,7 @@ namespace Notatnik.Server.Services.UserService
             return response;
 
         }
+
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512())

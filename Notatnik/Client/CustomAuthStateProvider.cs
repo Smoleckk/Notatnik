@@ -1,5 +1,7 @@
 ﻿
 
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text.Json;
 
@@ -21,8 +23,25 @@ namespace Notatnik.Client
             string token = await _localStorageService.GetItemAsStringAsync("token");
             var identity = new ClaimsIdentity();
 
+            //if (!string.IsNullOrEmpty(token))
+            //    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+
             if (!string.IsNullOrEmpty(token))
-                identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+            {
+                try
+                {
+                    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                    //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+                }
+                catch
+                {
+                    await _localStorageService.RemoveItemAsync("token");
+                    identity = new ClaimsIdentity();
+                }
+            }
+
+
+
             var user = new ClaimsPrincipal(identity);
             var state = new AuthenticationState(user);
 
