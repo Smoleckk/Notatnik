@@ -5,9 +5,8 @@ namespace Notatnik.Server.Services.AuthService
 {
     public interface IAuthService
     {
-        Task<User> Register(UserDto request);
-        Task<ServiceResponse<string>> Login(UserDto request);
-        //Task<ServiceResponse<User>> CreateUserNote(NoteDto noteDto, string username);
-        //Task<ServiceResponse<Note>> GetNote(int id, string password);
+        Task<User> Register(UserRegisterRequest request);
+        Task<ServiceResponse<string>> Login(UserLoginRequest request);
+        Task<ServiceResponse<string>> Verify(string token);
     }
 }

@@ -15,8 +15,6 @@ namespace Notatnik.Server.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        //public static User user = new User();
-        //private readonly IConfiguration _config;
         private readonly IAuthService _authService;
 
         public AuthController(IAuthService authService)
@@ -25,14 +23,14 @@ namespace Notatnik.Server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDto request)
+        public async Task<ActionResult<User>> Register(UserRegisterRequest request)
         {
             var user = await _authService.Register(request);
             return Ok(user);
 
         }
         [HttpPost("login")]
-        public async Task<ActionResult<ServiceResponse<string>>> Login(UserDto request)
+        public async Task<ActionResult<ServiceResponse<string>>> Login(UserLoginRequest request)
         {
             var response = await _authService.Login(request);
             if (!response.Success)
@@ -42,27 +40,16 @@ namespace Notatnik.Server.Controllers
 
             return Ok(response.Data);
         }
-        //[HttpPost("create-user-note")]
-        //public async Task<ActionResult<ServiceResponse<User>>> CreateUserNote(NoteDto noteDto, string username)
+        //[HttpPost("verify")]
+        //public async Task<ActionResult<ServiceResponse<string>>> Verify(string token)
         //{
-        //    var response = await _authService.CreateUserNote(noteDto, username);
+        //    var response = await _authService.Verify(token);
         //    if (!response.Success)
         //    {
-        //        return BadRequest("Bad");
+        //        return BadRequest("Bad Credentials");
         //    }
 
         //    return Ok(response.Data);
         //}
-        //[HttpGet("id")]
-        //public async Task<ActionResult<Note>> GetNote(int id, string password)
-        //{
-        //    var response = await _authService.GetNote(id, password);
-        //    if (!response.Success)
-        //    {
-        //        return NotFound(response.Message);
-        //    }
-        //    return Ok(response.Data);
-        //}
-
     }
 }

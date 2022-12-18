@@ -1,4 +1,4 @@
-﻿@page "/login"
+﻿@page "/register"
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
@@ -14,14 +14,27 @@
 
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
-            <RadzenTemplateForm TItem="UserLoginRequest" Data=@user Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
-                <RadzenFieldset Text="Login">
+            <RadzenTemplateForm TItem="UserRegisterRequest" Data=@user Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
+                <RadzenFieldset Text="Register">
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="First Name" />
+                        </div>
+                        <div class="col">
+                            <RadzenTextBox style="display: block" Name="Username" @bind-Value=@user.Username Class="w-100" />
+                            <RadzenRequiredValidator Component="Username" Text="First name is required" Popup=true Style="position: absolute" />
+                            <RadzenRegexValidator Component="Username" Text="You can only use a-z letters and numbers" Pattern="^[a-zA-Z0-9]+$" Popup=true Style="position: absolute" />
+                            <RadzenLengthValidator Component="Username" Min="3" Text="First name should be at least 3 characters" Popup=true Style="position: absolute" />
+                            <RadzenLengthValidator Component="Username" Max="10" Text="First name should be at most 10 characters" Popup=true Style="position: absolute" />
+                        </div>
+                    </div>
                     <div class="row mb-5">
                         <div class="col-md-4">
                             <RadzenLabel Text="Email" />
                         </div>
                         <div class="col">
                             <RadzenTextBox style="display: block" Name="Email" @bind-Value=@user.Email Class="w-100" />
+                            <RadzenRegexValidator Component="Username" Text="You can only use a-z letters and numbers" Pattern="^[a-zA-Z0-9]+$" Popup=true Style="position: absolute" />
                             <RadzenRequiredValidator Component="Email" Text="Email is required" Popup=true Style="position: absolute" />
                             <RadzenEmailValidator Component="Email" Text="Provide a valid email address" Popup=true Style="position: absolute" />
                         </div>
@@ -35,22 +48,26 @@
                             <RadzenRequiredValidator Component="Password" Text="Password is required" Popup=true Style="position: absolute" />
                         </div>
                     </div>
-                    <div class="text-danger">
-                        <span>@errorMessage</span>
+                    <div class="row mb-5">
+                        <div class="col-md-4">
+                            <RadzenLabel Text="Confirm Password" />
+                        </div>
+                        <div class="col">
+                            <RadzenPassword style="display: block" Name="ConfirmPassword" @bind-Value=@user.ConfirmPassword Class="w-100" />
+                            <RadzenRequiredValidator Component="ConfirmPassword" Text="ConfirmPassword is required" Popup=true Style="position: absolute" />
+                        </div>
                     </div>
                     <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
-                    <a href="/register">register</a>
                 </RadzenFieldset>
             </RadzenTemplateForm>
-
         </div>
     </div>
 </div>
 
 
 @code {
-    UserLoginRequest user = new UserLoginRequest();
-    private string errorMessage = string.Empty;
+    UserRegisterRequest user = new UserRegisterRequest();
+
 
 
 
@@ -68,20 +85,17 @@
 
     async Task OnSubmit()
     {
-        var result = await Http.PostAsJsonAsync("api/auth/login", user);
-        var token = await result.Content.ReadAsStringAsync();
-        Console.WriteLine(token);
-        if (token != "Bad Credentials")
+        var result = await Http.PostAsJsonAsync("api/auth/register", user);
+        if (result.IsSuccessStatusCode)
         {
-            await LocalStorage.SetItemAsync("token", token);
-            await AuthStateProvider.GetAuthenticationStateAsync();
+            NavigationManager.NavigateTo($"/login");
         }
         else
         {
-            errorMessage = "Bad Credentials";
-            user.Email = "";
-            user.Password = "";
+
         }
+
+
     }
     void Log(string eventName, string value)
     {

@@ -22,12 +22,19 @@ namespace Notatnik.Server.Services.AuthService
             _context = context;
         }
 
-        public async Task<User> Register(UserDto request)
+        public async Task<User> Register(UserRegisterRequest request)
         {
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             User user = new User();
 
+            if (_context.Users.Any(u => u.Email == request.Email || u.Username == request.Username))
+            {
+                return user;
+            }
+            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            user.Email = request.Email;
             user.Username = request.Username;
+            user.VerificationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.Notes = new List<Note>();
@@ -35,10 +42,11 @@ namespace Notatnik.Server.Services.AuthService
             await _context.SaveChangesAsync();
             return user;
         }
-        public async Task<ServiceResponse<string>> Login(UserDto request)
+
+        public async Task<ServiceResponse<string>> Login(UserLoginRequest request)
         {
             var response = new ServiceResponse<string>();
-            var user = await _context.Users.FirstOrDefaultAsync(i => i.Username == request.Username);
+            var user = await _context.Users.FirstOrDefaultAsync(i => i.Email == request.Email);
             if (user == null)
             {
                 response.Success = false;
@@ -55,74 +63,22 @@ namespace Notatnik.Server.Services.AuthService
             }
             return response;
         }
-        //public async Task<ServiceResponse<User>> CreateUserNote(NoteDto noteDto, string username)
-        //{
-        //    var response = new ServiceResponse<User>();
+        public async Task<ServiceResponse<string>> Verify(string token)
+        {
+            var response = new ServiceResponse<string>();
+            var user = await _context.Users.FirstOrDefaultAsync(i => i.VerificationToken == token);
+            if (user == null)
+            {
+                response.Success = false;
+                response.Message = "Invalid token";
+            }
+            response.Success = true;
+            response.Message = "User verified";
+            user.VerifiedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
 
-        //    CreatePasswordHash(noteDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
-        //    Note note = new Note();
-
-        //    note.Title = noteDto.Title;
-
-        //    if (noteDto.Secure)
-        //    {
-        //        note.Body = EncryptDecryptManager.Encrypt(noteDto.Body);
-        //        note.Secure = noteDto.Secure;
-        //        note.Public = false;
-        //        note.NoteHash = passwordHash;
-        //        note.NoteSalt = passwordSalt;
-        //    }
-        //    else
-        //    {
-        //        note.Body = noteDto.Body;
-        //        note.Secure = noteDto.Secure;
-        //        note.Public = noteDto.Public;
-        //        note.NoteHash = passwordHash;
-        //        note.NoteSalt = passwordSalt;
-        //    }
-
-
-        //    var user = await _context.Users.Include(d => d.Notes).FirstOrDefaultAsync(i => i.Username == username);
-        //    user.Notes.Add(note);
-
-        //    _context.Users.Update(user);
-        //    await _context.SaveChangesAsync();
-        //    response.Data = user;
-        //    return response;
-        //}
-        //public async Task<ServiceResponse<Note>> GetNote(int id, string password)
-        //{
-        //    var response = new ServiceResponse<Note>();
-
-        //    var note = await _context.Notes.FirstOrDefaultAsync(i => i.NoteId == id);
-        //    if (note == null)
-        //    {
-        //        response.Success = false;
-        //        response.Message = "Note not found.";
-        //        return response;
-
-        //    }
-        //    if (note.Secure == false)
-        //    {
-        //        response.Data = note;
-        //        response.Message = "Success, your note is not secure";
-        //        return response;
-
-        //    }
-        //    if (!VerifyPasswordHash(password, note.NoteHash, note.NoteSalt))
-        //    {
-        //        response.Success = false;
-        //        response.Message = "Bad Credentials";
-        //        return response;
-
-        //    }
-        //    note.Body = EncryptDecryptManager.Decrypt(note.Body);
-        //    response.Data = note;
-        //    response.Message = "Success, your note is secure";
-        //    return response;
-
-        //}
-
+            return response;
+        }
         private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
