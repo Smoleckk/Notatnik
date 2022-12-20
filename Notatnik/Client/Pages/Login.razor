@@ -69,19 +69,24 @@
     async Task OnSubmit()
     {
         var result = await Http.PostAsJsonAsync("api/auth/login", user);
-        var token = await result.Content.ReadAsStringAsync();
-        Console.WriteLine(token);
-        if (token != "Bad Credentials")
+
+        if (!result.IsSuccessStatusCode)
         {
-            await LocalStorage.SetItemAsync("token", token);
-            await AuthStateProvider.GetAuthenticationStateAsync();
-        }
-        else
-        {
-            errorMessage = "Bad Credentials";
+            //errorMessage = result.ReasonPhrase;
+            Console.WriteLine($"There was an error! {errorMessage}");
+            errorMessage = "Wrong Credentials";
             user.Email = "";
             user.Password = "";
+            return;
         }
+
+        var token = await result.Content.ReadAsStringAsync();
+        //Console.WriteLine(token);
+
+        await LocalStorage.SetItemAsync("token", token);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+
+
     }
     void Log(string eventName, string value)
     {

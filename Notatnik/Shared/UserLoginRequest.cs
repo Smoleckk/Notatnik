@@ -13,5 +13,9 @@ namespace Notatnik.Shared
         public string Email { get; set; } = string.Empty;
         [Required]
         public string Password { get; set; } = string.Empty;
+
+        //prevent too much try login
+        public DateTime? LastLoginAttemptAt { get; set; }
+        public int LoginFailedAttemptsCount { get; set; }
     }
 }

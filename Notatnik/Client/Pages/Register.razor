@@ -26,6 +26,7 @@
                             <RadzenRegexValidator Component="Username" Text="You can only use a-z letters and numbers" Pattern="^[a-zA-Z0-9]+$" Popup=true Style="position: absolute" />
                             <RadzenLengthValidator Component="Username" Min="3" Text="First name should be at least 3 characters" Popup=true Style="position: absolute" />
                             <RadzenLengthValidator Component="Username" Max="10" Text="First name should be at most 10 characters" Popup=true Style="position: absolute" />
+
                         </div>
                     </div>
                     <div class="row mb-5">
@@ -45,7 +46,7 @@
                         </div>
                         <div class="col">
                             <RadzenPassword style="display: block" Name="Password" @bind-Value=@user.Password Class="w-100" />
-                            <RadzenRequiredValidator Component="Password" Text="Password is required" Popup=true Style="position: absolute" />
+                            @*<RadzenRequiredValidator Component="Password" Text="Password is required" Popup=true Style="position: absolute" />*@
                         </div>
                     </div>
                     <div class="row mb-5">
@@ -54,8 +55,11 @@
                         </div>
                         <div class="col">
                             <RadzenPassword style="display: block" Name="ConfirmPassword" @bind-Value=@user.ConfirmPassword Class="w-100" />
-                            <RadzenRequiredValidator Component="ConfirmPassword" Text="ConfirmPassword is required" Popup=true Style="position: absolute" />
+                            @*<RadzenRequiredValidator Component="ConfirmPassword" Text="ConfirmPassword is required" Popup=true Style="position: absolute" />*@
                         </div>
+                    </div>
+                    <div class="text-danger">
+                        <span>@errorMessage</span>
                     </div>
                     <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
                 </RadzenFieldset>
@@ -67,7 +71,7 @@
 
 @code {
     UserRegisterRequest user = new UserRegisterRequest();
-
+    private string errorMessage = string.Empty;
 
 
 
@@ -92,7 +96,8 @@
         }
         else
         {
-
+            //var error = await result.ReadAsync();
+            errorMessage = "Someting went wrong";
         }
 
 
