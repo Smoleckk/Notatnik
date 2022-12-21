@@ -6,42 +6,62 @@
 @using Notatnik.Server
 @using Notatnik.Shared
 
+@using DNTCaptcha.Blazor
 
-@using Radzen
-@using System.Text.Json
 
 <div class="container my-4">
 
     <div class="row">
         <div class="col-lg-6 offset-lg-3">
-            <RadzenTemplateForm TItem="UserLoginRequest" Data=@user Submit=@OnSubmit InvalidSubmit=@OnInvalidSubmit>
-                <RadzenFieldset Text="Login">
-                    <div class="row mb-5">
-                        <div class="col-md-4">
-                            <RadzenLabel Text="Email" />
-                        </div>
-                        <div class="col">
-                            <RadzenTextBox style="display: block" Name="Email" @bind-Value=@user.Email Class="w-100" />
-                            <RadzenRequiredValidator Component="Email" Text="Email is required" Popup=true Style="position: absolute" />
-                            <RadzenEmailValidator Component="Email" Text="Provide a valid email address" Popup=true Style="position: absolute" />
-                        </div>
-                    </div>
-                    <div class="row mb-5">
-                        <div class="col-md-4">
-                            <RadzenLabel Text="Password" />
-                        </div>
-                        <div class="col">
-                            <RadzenPassword style="display: block" Name="Password" @bind-Value=@user.Password Class="w-100" />
-                            <RadzenRequiredValidator Component="Password" Text="Password is required" Popup=true Style="position: absolute" />
-                        </div>
-                    </div>
-                    <div class="text-danger">
-                        <span>@errorMessage</span>
-                    </div>
-                    <RadzenButton ButtonType="ButtonType.Submit" Text="Submit"></RadzenButton>
-                    <a href="/register">register</a>
-                </RadzenFieldset>
-            </RadzenTemplateForm>
+            <EditForm Model="user" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label for="email">Email</label>
+                    <InputText id="email" @bind-Value="user.Email" class="form-control" />
+                    <ValidationMessage For="@(() => user.Email)" />
+                </div>
+                <div class="mb-3">
+                    <label for="password">Password</label>
+                    <InputText id="password" @bind-Value="user.Password" class="form-control" type="password" />
+                    <ValidationMessage For="@(() => user.Password)" />
+                </div>
+                <div class="mb-3">
+                    <label for="password">Password</label>
+                    <InputText name="SecurityNumber" @bind-Value="user.EnteredCaptchaText1" />
+                    <DntInputCaptcha @bind-Value="user.CaptchaText1" Language="@NumberToWordLanguage.English"
+                                     DisplayMode="@DisplayMode.NumberToWord"
+                                     AllowThousandsSeparators="false"
+                                     Max="900"
+                                     Min="1"
+                                     AbsoluteExpiration="@TimeSpan.FromMinutes(2)"
+                                     ShowRefreshButton="true"
+                                     FontSize="21"
+                                     FontName="Times New Roman"
+                                     FontColor="#603F83FF"
+                                     BackgroundColor="#FCF6F5FF"
+                                     RandomLinesCount="2"
+                                     RandomCirclesCount="6"
+                                     BorderWidth="0.3"
+                                     BorderColor="grey"
+                                     NoisePointsCount="25"
+                                     Padding="11"
+                                     ShadowBlur="7"
+                                     ShadowColor="navy"
+                                     ShadowOffsetX="-3"
+                                     ShadowOffsetY="-3"
+                                     TimerInterval="@TimeSpan.FromMilliseconds(2500)"
+                                     CaptchaCanvasClass=""
+                                     CaptchaDivClass="d-flex justify-content-center align-self-center ms-1"
+                                     RefreshButtonClass="bi-arrow-repeat btn-lg"
+                                     RefreshButtonTitle="Refresh" />
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                <div class="text-danger">
+                    <span>@errorMessage</span>
+                </div>
+            </EditForm>
+
+            <a href="/register">register</a>
 
         </div>
     </div>
@@ -49,10 +69,8 @@
 
 
 @code {
-    UserLoginRequest user = new UserLoginRequest();
+    UserLoginCaptcha user = new UserLoginCaptcha();
     private string errorMessage = string.Empty;
-
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -68,6 +86,12 @@
 
     async Task OnSubmit()
     {
+        //UserLoginRequest userLoginRequest = new UserLoginRequest
+        //    {
+        //        Email = user.Email,
+        //        Password = user.Password
+        //    };
+
         var result = await Http.PostAsJsonAsync("api/auth/login", user);
 
         if (!result.IsSuccessStatusCode)
@@ -87,13 +111,5 @@
         await AuthStateProvider.GetAuthenticationStateAsync();
 
 
-    }
-    void Log(string eventName, string value)
-    {
-        //Console.WriteLine($"{eventName}: {value}");
-    }
-    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
-    {
-        //Log("InvalidSubmit", JsonSerializer.Serialize(args, new JsonSerializerOptions() { WriteIndented = true }));
     }
 }

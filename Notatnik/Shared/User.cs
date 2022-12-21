@@ -17,12 +17,6 @@ namespace Notatnik.Server
         public string? PasswordResetToken { get; set; }
         public DateTime? ResetTokenExpires { get; set; }
 
-        //prevent too much try login
-        public DateTime? LastLoginAttemptAt { get; set; }
-        public int LoginFailedAttemptsCount { get; set; }
-
-
-
         public List<Note> Notes { get; set; }
     }
 }

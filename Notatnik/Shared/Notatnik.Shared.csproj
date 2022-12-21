@@ -8,7 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="BlazorCaptcha" Version="1.3.0" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.3.0" />
+    <PackageReference Include="DNTCaptcha.Blazor" Version="1.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.11" />
     <PackageReference Include="Radzen.Blazor" Version="4.4.3" />
   </ItemGroup>

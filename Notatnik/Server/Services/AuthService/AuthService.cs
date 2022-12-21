@@ -15,7 +15,8 @@ namespace Notatnik.Server.Services.AuthService
     {
         private readonly IConfiguration _config;
         private readonly DataContext _context;
-
+        const int MaxNumberOfFailedAttemptsToLogin = 10;
+        const int BlockMinutesAfterLimitFailedAttemptsToLogin = 15; // 15 min
         public AuthService(IConfiguration config, DataContext context)
         {
             _config = config;
@@ -43,7 +44,7 @@ namespace Notatnik.Server.Services.AuthService
             return user;
         }
 
-        public async Task<ServiceResponse<string>> Login(UserLoginRequest request)
+        public async Task<ServiceResponse<string>> Login(UserLoginCaptcha request)
         {
             var response = new ServiceResponse<string>();
             var user = await _context.Users.FirstOrDefaultAsync(i => i.Email == request.Email);
@@ -51,6 +52,7 @@ namespace Notatnik.Server.Services.AuthService
             {
                 response.Success = false;
                 response.Message = "Bad Credentials";
+                return response;
             }
             if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             {

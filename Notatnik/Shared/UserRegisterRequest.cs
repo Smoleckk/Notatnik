@@ -15,7 +15,7 @@ namespace Notatnik.Shared
         [Required]
         public string Username { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "ala")]
         [ValidPass]
         public string Password { get; set; } = string.Empty;
         [Required, Compare("Password")]

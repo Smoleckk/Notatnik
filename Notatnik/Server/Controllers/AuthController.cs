@@ -30,7 +30,7 @@ namespace Notatnik.Server.Controllers
 
         }
         [HttpPost("login")]
-        public async Task<ActionResult<ServiceResponse<string>>> Login(UserLoginRequest request)
+        public async Task<ActionResult<ServiceResponse<string>>> Login(UserLoginCaptcha request)
         {
             var response = await _authService.Login(request);
             if (!response.Success)
