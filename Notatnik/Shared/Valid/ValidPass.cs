@@ -1,5 +1,7 @@
 ﻿using Notatnik.Shared;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace Notatnik.Server.Valid
 {
@@ -9,28 +11,30 @@ namespace Notatnik.Server.Valid
               IsValid(object value, ValidationContext validationContext)
         {
             string pass = value.ToString();
+            int passLength = pass.Length;
+            //z passLength znaków(małych liter[a - z], duzych liter[A - Z], cyfr[0 - 9] oraz) 26+26++10
+            double entropyPerChar = Math.Log2(62);
+            int entropy = (int)(passLength * entropyPerChar);
 
-            if (pass.Count() < 6)
+            if (entropy < 30)
             {
                 return new ValidationResult
-                    ("Pass entrophy too low" + Entropy(pass));
+                    ("Twoje hasło jest bardzo słabe " + entropy);
             }
-            //else if (_lastDeliveryDate > DateTime.Now)
-            //{
-            //    return new ValidationResult
-            //        ("Last Delivery Date can not be greater than current date.");
-            //}
+            if (entropy < 40)
+            {
+                return new ValidationResult
+                    ("Twoje hasło nie jest jeszcze wystarczające " + entropy);
+            }
+            if (entropy < 60)
+            {
+                return new ValidationResult
+                    ("Możesz się jeszcze postarać! " + entropy);
+            }
             else
             {
                 return ValidationResult.Success;
             }
-        }
-        public static int Entropy(string s)
-        {
-            var d = new Dictionary<char, bool>();
-            foreach (char c in s)
-                if (!d.ContainsKey(c)) d.Add(c, true);
-            return d.Count();
         }
     }
 }
