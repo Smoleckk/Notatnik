@@ -9,6 +9,7 @@ namespace Notatnik.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "User")]
     public class NoteController : ControllerBase
     {
         private readonly INoteService _noteService;
@@ -29,20 +30,21 @@ namespace Notatnik.Server.Controllers
             return Ok(response.Data.ToArray());
         }
 
-        [HttpGet("notes-by-user"), Authorize(Roles = "User")]
-        public async Task<ActionResult<List<NoteDisplayDto>>> GetNotesByUser(string username)
+        [HttpGet("notes-by-user")]
+        public async Task<ActionResult<List<NoteDisplayDto>>> GetNotesByUser()
         {
-            var response = await _noteService.GetNotesByUser(username);
+            var response = await _noteService.GetNotesByUser();
             if (!response.Success)
             {
                 return NotFound();
             }
             return Ok(response.Data.ToArray());
         }
+
         [HttpGet("note-by-user")]
-        public async Task<ActionResult<NoteDisplayDto>> GetNote(int id, string notePassword, string username)
+        public async Task<ActionResult<NoteDisplayDto>> GetNote(int id, string notePassword)
         {
-            var response = await _noteService.GetNoteDetails(id, notePassword, username);
+            var response = await _noteService.GetNoteDetails(id, notePassword);
             //if (!response.Success)
             //{
             //    return NotFound(response);

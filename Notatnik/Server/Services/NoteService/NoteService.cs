@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Notatnik.Server.Data;
+using Notatnik.Server.Services.UserService;
 using Notatnik.Shared;
 using System;
 using System.Security.Cryptography;
@@ -12,12 +13,14 @@ namespace Notatnik.Server.Services.NoteService
         private readonly IConfiguration _config;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public NoteService(IConfiguration config, DataContext context, IMapper mapper)
+        public NoteService(IConfiguration config, DataContext context, IMapper mapper, IUserService userService)
         {
             _config = config;
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<ServiceResponse<List<NoteDisplayDto>>> GetNotes()
@@ -25,14 +28,14 @@ namespace Notatnik.Server.Services.NoteService
             var response = new ServiceResponse<List<NoteDisplayDto>>();
 
             var notes = await _context.Notes.Where(p => p.Public == true && p.Secure == false).ToListAsync();
-            //.Where(p => p.Public == true && p.Secure == false)
+
             if (notes == null)
             {
                 response.Success = false;
                 response.Message = "Notes not found.";
                 return response;
             }
-            List<NoteDisplayDto> notesDto = new List<NoteDisplayDto>();
+            List<NoteDisplayDto> notesDto = new();
             foreach (var note in notes)
             {
                 var noteDisplayDto = _mapper.Map<NoteDisplayDto>(note);
@@ -42,10 +45,10 @@ namespace Notatnik.Server.Services.NoteService
             response.Data = notesDto;
             return response;
         }
-        public async Task<ServiceResponse<List<NoteDisplayDto>>> GetNotesByUser(string username)
+        public async Task<ServiceResponse<List<NoteDisplayDto>>> GetNotesByUser()
         {
             var response = new ServiceResponse<List<NoteDisplayDto>>();
-
+            var username = _userService.GetUser();
             var user = await _context.Users.Include(d => d.Notes).FirstOrDefaultAsync(i => i.Username == username);
             var notes = user.Notes;
             if (notes == null)
@@ -54,7 +57,7 @@ namespace Notatnik.Server.Services.NoteService
                 response.Message = "Notes not found.";
                 return response;
             }
-            List<NoteDisplayDto> notesDto = new List<NoteDisplayDto>();
+            List<NoteDisplayDto> notesDto = new();
             foreach (var note in notes)
             {
                 var noteDisplayDto = _mapper.Map<NoteDisplayDto>(note);
@@ -65,9 +68,11 @@ namespace Notatnik.Server.Services.NoteService
             return response;
 
         }
-        public async Task<ServiceResponse<NoteDisplayDto>> GetNoteDetails(int id, string password, string username)
+        public async Task<ServiceResponse<NoteDisplayDto>> GetNoteDetails(int id, string password)
         {
             var response = new ServiceResponse<NoteDisplayDto>();
+            var username = _userService.GetUser();
+
             var user = await _context.Users.Include(d => d.Notes).FirstOrDefaultAsync(i => i.Username == username);
 
             var note = user.Notes.FirstOrDefault(i => i.NoteId == id);

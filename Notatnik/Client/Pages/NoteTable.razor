@@ -92,7 +92,7 @@
         var user = authState.User;
 
         surname = user.Identity.Name;
-        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note/notes-by-user?username={surname}");
+        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note/notes-by-user");
     }
     void SecureNote()
     {
@@ -119,9 +119,9 @@
         ServiceResponse<NoteDisplayDto> srn = new ServiceResponse<NoteDisplayDto>();
 
         if (password == "")
-            srn = await Http.GetFromJsonAsync<ServiceResponse<NoteDisplayDto>>($"https://localhost:7288/api/Note/note-by-user?id={value}&notePassword=dummypass&username={surname}");
+            srn = await Http.GetFromJsonAsync<ServiceResponse<NoteDisplayDto>>($"https://localhost:7288/api/Note/note-by-user?id={value}&notePassword=dummypass");
         else
-            srn = await Http.GetFromJsonAsync<ServiceResponse<NoteDisplayDto>>($"https://localhost:7288/api/Note/note-by-user?id={value}&notePassword={password}&username={surname}");
+            srn = await Http.GetFromJsonAsync<ServiceResponse<NoteDisplayDto>>($"https://localhost:7288/api/Note/note-by-user?id={value}&notePassword={password}");
         //isSecure = false;
         if (srn.Success)
         {
@@ -164,7 +164,7 @@
 
 
         await Http.PostAsJsonAsync($"https://localhost:7288/api/User/create-user-note", noteDto);
-        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note/notes-by-user?username={surname}");
+        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note/notes-by-user");
 
     }
 
