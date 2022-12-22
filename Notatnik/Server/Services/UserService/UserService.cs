@@ -9,10 +9,12 @@ namespace Notatnik.Server.Services.UserService
     public class UserService : IUserService
     {
         private readonly DataContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(DataContext context)
+        public UserService(DataContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ServiceResponse<NoteDto>> CreateUserNote(NoteDto noteDto, string username)
@@ -81,6 +83,16 @@ namespace Notatnik.Server.Services.UserService
             response.Message = "Success, your note is secure";
             return response;
 
+        }
+
+        public string GetUser()
+        {
+            var result = string.Empty;
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                result = _httpContextAccessor.HttpContext.User?.Identity?.Name;
+            }
+            return result;
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

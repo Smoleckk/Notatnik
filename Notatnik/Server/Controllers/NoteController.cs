@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Notatnik.Server.Services.NoteService;
 using Notatnik.Shared;
@@ -17,7 +18,7 @@ namespace Notatnik.Server.Controllers
             _noteService = noteService;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "User")]
         public async Task<ActionResult<List<NoteDisplayDto>>> GetNotes()
         {
             var response = await _noteService.GetNotes();
@@ -27,6 +28,7 @@ namespace Notatnik.Server.Controllers
             }
             return Ok(response.Data.ToArray());
         }
+
         [HttpGet("notes-by-user")]
         public async Task<ActionResult<List<NoteDisplayDto>>> GetNotesByUser(string username)
         {

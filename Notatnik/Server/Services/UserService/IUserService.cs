@@ -7,5 +7,7 @@ namespace Notatnik.Server.Services.UserService
         Task<ServiceResponse<NoteDto>> CreateUserNote(NoteDto noteDto, string username);
         Task<ServiceResponse<Note>> GetNote(int id, string password);
 
+        string GetUser();
+
     }
 }

@@ -27,15 +27,15 @@ namespace Notatnik.Server.Controllers
 
             return Ok(response.Data);
         }
-        [HttpGet("id")]
-        public async Task<ActionResult<ServiceResponse<Note>>> GetNote(int id, string password)
-        {
-            var response = await _userService.GetNote(id, password);
-            if (!response.Success)
-            {
-                return NotFound(response);
-            }
-            return Ok(response);
-        }
+        //[HttpGet("id")]
+        //public async Task<ActionResult<ServiceResponse<Note>>> GetNote(int id, string password)
+        //{
+        //    var response = await _userService.GetNote(id, password);
+        //    if (!response.Success)
+        //    {
+        //        return NotFound(response);
+        //    }
+        //    return Ok(response);
+        //}
     }
 }

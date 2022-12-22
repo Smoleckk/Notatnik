@@ -1,8 +1,10 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Notatnik.Server.Services.AuthService;
+using Notatnik.Server.Services.UserService;
 using Notatnik.Shared;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,10 +19,19 @@ namespace Notatnik.Server.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
+        }
+
+        [HttpGet("GetMe"), Authorize(Roles = "User")]
+        public ActionResult<string> GetMe()
+        {
+            var username = _userService.GetUser();
+            return Ok(username);
         }
 
         [HttpPost("register")]
