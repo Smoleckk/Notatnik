@@ -15,9 +15,9 @@ namespace Notatnik.Server.Services.UserService
             _context = context;
         }
 
-        public async Task<ServiceResponse<User>> CreateUserNote(NoteDto noteDto, string username)
+        public async Task<ServiceResponse<NoteDto>> CreateUserNote(NoteDto noteDto, string username)
         {
-            var response = new ServiceResponse<User>();
+            var response = new ServiceResponse<NoteDto>();
 
             CreatePasswordHash(noteDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
             Note note = new Note();
@@ -47,7 +47,7 @@ namespace Notatnik.Server.Services.UserService
 
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
-            response.Data = user;
+            response.Data = noteDto;
             return response;
         }
         public async Task<ServiceResponse<Note>> GetNote(int id, string password)

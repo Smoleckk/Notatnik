@@ -41,11 +41,11 @@ namespace Notatnik.Server.Controllers
         public async Task<ActionResult<NoteDisplayDto>> GetNote(int id, string notePassword, string username)
         {
             var response = await _noteService.GetNoteDetails(id, notePassword, username);
-            if (!response.Success)
-            {
-                return NotFound(response.Message);
-            }
-            return Ok(response.Data);
+            //if (!response.Success)
+            //{
+            //    return NotFound(response);
+            //}
+            return Ok(response);
         }
     }
 }

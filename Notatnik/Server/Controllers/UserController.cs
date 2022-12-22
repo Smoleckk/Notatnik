@@ -17,7 +17,7 @@ namespace Notatnik.Server.Controllers
         }
 
         [HttpPost("create-user-note")]
-        public async Task<ActionResult<ServiceResponse<User>>> CreateUserNote(NoteDto noteDto, string username)
+        public async Task<ActionResult<ServiceResponse<NoteDto>>> CreateUserNote(NoteDto noteDto, string username)
         {
             var response = await _userService.CreateUserNote(noteDto, username);
             if (!response.Success)
@@ -28,14 +28,14 @@ namespace Notatnik.Server.Controllers
             return Ok(response.Data);
         }
         [HttpGet("id")]
-        public async Task<ActionResult<Note>> GetNote(int id, string password)
+        public async Task<ActionResult<ServiceResponse<Note>>> GetNote(int id, string password)
         {
             var response = await _userService.GetNote(id, password);
             if (!response.Success)
             {
-                return NotFound(response.Message);
+                return NotFound(response);
             }
-            return Ok(response.Data);
+            return Ok(response);
         }
     }
 }

@@ -56,13 +56,11 @@
                                      RefreshButtonTitle="Refresh" />
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
+                <button type="button" @onclick="Register" class="btn btn-primary">Register</button>
                 <div class="text-danger">
                     <span>@errorMessage</span>
                 </div>
             </EditForm>
-
-            <a href="/register">register</a>
-
         </div>
     </div>
 </div>
@@ -80,36 +78,29 @@
         if (user.Identity.Name != null)
         {
             NavigationManager.NavigateTo($"/home");
-
         }
     }
 
+    async Task Register()
+    {
+        NavigationManager.NavigateTo($"/register");
+
+    }
     async Task OnSubmit()
     {
-        //UserLoginRequest userLoginRequest = new UserLoginRequest
-        //    {
-        //        Email = user.Email,
-        //        Password = user.Password
-        //    };
-
         var result = await Http.PostAsJsonAsync("api/auth/login", user);
 
         if (!result.IsSuccessStatusCode)
         {
-            //errorMessage = result.ReasonPhrase;
+            errorMessage = await result.Content.ReadAsStringAsync();
             Console.WriteLine($"There was an error! {errorMessage}");
-            errorMessage = "Wrong Credentials";
             user.Email = "";
             user.Password = "";
             return;
         }
 
         var token = await result.Content.ReadAsStringAsync();
-        //Console.WriteLine(token);
-
         await LocalStorage.SetItemAsync("token", token);
         await AuthStateProvider.GetAuthenticationStateAsync();
-
-
     }
 }

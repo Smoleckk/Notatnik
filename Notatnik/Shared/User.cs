@@ -17,6 +17,10 @@ namespace Notatnik.Server
         public string? PasswordResetToken { get; set; }
         public DateTime? ResetTokenExpires { get; set; }
 
+        public int NumberOfLoginTry { get; set; } = 0;
+        public DateTime LoginLastTry { get; set; } = DateTime.Now.AddHours(1);
+        public DateTime LoginBlockUntil { get; set; } = DateTime.Now;
+
         public List<Note> Notes { get; set; }
     }
 }

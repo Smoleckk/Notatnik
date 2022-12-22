@@ -18,7 +18,7 @@ namespace Notatnik.Shared
         public string Username { get; set; } = string.Empty;
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Allowed only leters, numbers and")]
-        [ValidPass]
+        //[ValidPass]
         public string Password { get; set; } = string.Empty;
         [Required, Compare("Password")]
         [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Allowed only leters, numbers and")]

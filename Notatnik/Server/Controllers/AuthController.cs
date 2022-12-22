@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Notatnik.Server.Services.AuthService;
@@ -23,10 +24,14 @@ namespace Notatnik.Server.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserRegisterRequest request)
+        public async Task<ActionResult<ServiceResponse<string>>> Register(UserRegisterRequest request)
         {
-            var user = await _authService.Register(request);
-            return Ok(user);
+            var response = await _authService.Register(request);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+            return Ok(response.Message);
 
         }
         [HttpPost("login")]
@@ -35,7 +40,7 @@ namespace Notatnik.Server.Controllers
             var response = await _authService.Login(request);
             if (!response.Success)
             {
-                return BadRequest("Bad Credentials");
+                return BadRequest(response.Message);
             }
 
             return Ok(response.Data);

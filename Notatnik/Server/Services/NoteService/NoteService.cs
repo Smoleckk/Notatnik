@@ -95,7 +95,7 @@ namespace Notatnik.Server.Services.NoteService
                 return response;
 
             }
-            note.Body = EncryptDecryptManager.Decrypt(note.Body);
+            noteDisplayDto.Body = EncryptDecryptManager.Decrypt(note.Body);
             response.Data = noteDisplayDto;
             response.Message = "Success, your note is secure";
             return response;

@@ -18,20 +18,14 @@ namespace Notatnik.Client
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            //string token = "eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3RyaW5nIiwiZXhwIjoxNjcwNDM1MzI0fQ.1e1VSLG9AaBWHihz7z6Hfx3qB2JFWWNBapvF0FkcdmB5OnVJgoO1O3JTN4RhNvM8ZsmomcMREr4RoNX6cVQw2A";
-
             string token = await _localStorageService.GetItemAsStringAsync("token");
             var identity = new ClaimsIdentity();
-
-            //if (!string.IsNullOrEmpty(token))
-            //    identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
 
             if (!string.IsNullOrEmpty(token))
             {
                 try
                 {
                     identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-                    //_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
                 }
                 catch
                 {
@@ -39,9 +33,6 @@ namespace Notatnik.Client
                     identity = new ClaimsIdentity();
                 }
             }
-
-
-
             var user = new ClaimsPrincipal(identity);
             var state = new AuthenticationState(user);
 
