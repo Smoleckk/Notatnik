@@ -29,7 +29,7 @@ namespace Notatnik.Server.Controllers
             return Ok(response.Data.ToArray());
         }
 
-        [HttpGet("notes-by-user")]
+        [HttpGet("notes-by-user"), Authorize(Roles = "User")]
         public async Task<ActionResult<List<NoteDisplayDto>>> GetNotesByUser(string username)
         {
             var response = await _noteService.GetNotesByUser(username);

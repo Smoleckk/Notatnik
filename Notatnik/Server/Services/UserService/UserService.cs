@@ -17,14 +17,15 @@ namespace Notatnik.Server.Services.UserService
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<ServiceResponse<NoteDto>> CreateUserNote(NoteDto noteDto, string username)
+        public async Task<ServiceResponse<NoteDto>> CreateUserNote(NoteDto noteDto)
         {
             var response = new ServiceResponse<NoteDto>();
 
             CreatePasswordHash(noteDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            Note note = new Note();
-
-            note.Title = noteDto.Title;
+            Note note = new Note
+            {
+                Title = noteDto.Title
+            };
 
             if (noteDto.Secure)
             {
@@ -43,7 +44,7 @@ namespace Notatnik.Server.Services.UserService
                 note.NoteSalt = passwordSalt;
             }
 
-
+            string username = GetUser();
             var user = await _context.Users.Include(d => d.Notes).FirstOrDefaultAsync(i => i.Username == username);
             user.Notes.Add(note);
 
@@ -51,38 +52,6 @@ namespace Notatnik.Server.Services.UserService
             await _context.SaveChangesAsync();
             response.Data = noteDto;
             return response;
-        }
-        public async Task<ServiceResponse<Note>> GetNote(int id, string password)
-        {
-            var response = new ServiceResponse<Note>();
-
-            var note = await _context.Notes.FirstOrDefaultAsync(i => i.NoteId == id);
-            if (note == null)
-            {
-                response.Success = false;
-                response.Message = "Note not found.";
-                return response;
-
-            }
-            if (note.Secure == false)
-            {
-                response.Data = note;
-                response.Message = "Success, your note is not secure";
-                return response;
-
-            }
-            if (!VerifyPasswordHash(password, note.NoteHash, note.NoteSalt))
-            {
-                response.Success = false;
-                response.Message = "Bad Credentials";
-                return response;
-
-            }
-            note.Body = EncryptDecryptManager.Decrypt(note.Body);
-            response.Data = note;
-            response.Message = "Success, your note is secure";
-            return response;
-
         }
 
         public string GetUser()

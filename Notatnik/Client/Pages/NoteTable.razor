@@ -163,7 +163,7 @@
         notePassword = "";
 
 
-        await Http.PostAsJsonAsync($"https://localhost:7288/api/User/create-user-note?username={surname}", noteDto);
+        await Http.PostAsJsonAsync($"https://localhost:7288/api/User/create-user-note", noteDto);
         notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note/notes-by-user?username={surname}");
 
     }

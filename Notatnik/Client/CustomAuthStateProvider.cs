@@ -10,22 +10,27 @@ namespace Notatnik.Client
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         private readonly ILocalStorageService _localStorageService;
+        private readonly HttpClient _http;
 
-        public CustomAuthStateProvider(ILocalStorageService localStorageService)
+        public CustomAuthStateProvider(ILocalStorageService localStorageService, HttpClient http)
         {
             _localStorageService = localStorageService;
+            _http = http;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             string token = await _localStorageService.GetItemAsStringAsync("token");
             var identity = new ClaimsIdentity();
-
+            _http.DefaultRequestHeaders.Authorization = null;
             if (!string.IsNullOrEmpty(token))
             {
                 try
                 {
                     identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+                    _http.DefaultRequestHeaders.Authorization =
+                        new AuthenticationHeaderValue("Bearer", token.Replace("\"", ""));
+
                 }
                 catch
                 {

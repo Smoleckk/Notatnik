@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Notatnik.Server.Services.UserService;
 using Notatnik.Shared;
+using System.Data;
 
 namespace Notatnik.Server.Controllers
 {
@@ -16,10 +18,10 @@ namespace Notatnik.Server.Controllers
             _userService = userService;
         }
 
-        [HttpPost("create-user-note")]
-        public async Task<ActionResult<ServiceResponse<NoteDto>>> CreateUserNote(NoteDto noteDto, string username)
+        [HttpPost("create-user-note"), Authorize(Roles = "User")]
+        public async Task<ActionResult<ServiceResponse<NoteDto>>> CreateUserNote(NoteDto noteDto)
         {
-            var response = await _userService.CreateUserNote(noteDto, username);
+            var response = await _userService.CreateUserNote(noteDto);
             if (!response.Success)
             {
                 return BadRequest("Bad");
@@ -27,15 +29,5 @@ namespace Notatnik.Server.Controllers
 
             return Ok(response.Data);
         }
-        //[HttpGet("id")]
-        //public async Task<ActionResult<ServiceResponse<Note>>> GetNote(int id, string password)
-        //{
-        //    var response = await _userService.GetNote(id, password);
-        //    if (!response.Success)
-        //    {
-        //        return NotFound(response);
-        //    }
-        //    return Ok(response);
-        //}
     }
 }
