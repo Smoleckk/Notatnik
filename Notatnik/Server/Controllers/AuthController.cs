@@ -16,6 +16,8 @@ namespace Notatnik.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[ValidateAntiForgeryToken]
+
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;

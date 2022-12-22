@@ -6,6 +6,6 @@ namespace Notatnik.Server.Services.NoteService
     {
         Task<ServiceResponse<List<NoteDisplayDto>>> GetNotes();
         Task<ServiceResponse<List<NoteDisplayDto>>> GetNotesByUser();
-        Task<ServiceResponse<NoteDisplayDto>> GetNoteDetails(int id, string password);
+        Task<ServiceResponse<NoteDisplayDto>> GetNoteDetails(int id, Credentials credentials);
     }
 }

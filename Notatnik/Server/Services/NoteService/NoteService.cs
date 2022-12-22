@@ -68,7 +68,7 @@ namespace Notatnik.Server.Services.NoteService
             return response;
 
         }
-        public async Task<ServiceResponse<NoteDisplayDto>> GetNoteDetails(int id, string password)
+        public async Task<ServiceResponse<NoteDisplayDto>> GetNoteDetails(int id, Credentials credentials)
         {
             var response = new ServiceResponse<NoteDisplayDto>();
             var username = _userService.GetUser();
@@ -93,7 +93,7 @@ namespace Notatnik.Server.Services.NoteService
                 return response;
 
             }
-            if (!VerifyPasswordHash(password, note.NoteHash, note.NoteSalt))
+            if (!VerifyPasswordHash(credentials.Password, note.NoteHash, note.NoteSalt))
             {
                 response.Success = false;
                 response.Message = "Bad Credentials";

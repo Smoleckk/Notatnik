@@ -69,9 +69,9 @@ else
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
-
-
+//hrrps
 app.UseHttpsRedirection();
+//.NET Content Security Policy
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();

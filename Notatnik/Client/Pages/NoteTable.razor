@@ -12,17 +12,17 @@
     <div class="row px-3">
         <div class="col-md-3 p-3">
             <RadzenCard>
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">ListBox</RadzenText>
-                <RadzenListBox @bind-Value=@value Data=@notes TextProperty="Title" ValueProperty="NoteId" Change=@checkPassNeed Style="height:200px" Class="w-100" />
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Notatki</RadzenText>
+                <RadzenListBox @bind-Value=@pressNoteId Data=@notes TextProperty="Title" ValueProperty="NoteId" Change=@checkPassNeed Style="height:200px" Class="w-100" />
             </RadzenCard>
-            @if (isSecure && value > 0)
+            @if (isSecure && pressNoteId > 0)
             {
                 <RadzenCard>
                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">To see this note, enter password</RadzenText>
-                    <RadzenPassword Placeholder="Enter password..." @bind-Value=@password Class="w-100" />
+                    <RadzenPassword Placeholder="Enter password..." @bind-Value=@credentials.Password Class="w-100" />
                 </RadzenCard>
             }
-            @if (value > 0)
+            @if (pressNoteId > 0)
             {
                 <RadzenButton Click=@getNoteDetails Text="Show note details" ButtonStyle="ButtonStyle.Dark" />
 
@@ -74,9 +74,9 @@
 </div>
 
 @code {
-    int value = 0;
-    string password = "";
+    int pressNoteId = 0;
     bool isSecure = false;
+    Credentials credentials = new();
     List<NoteDisplayDto> notes = new List<NoteDisplayDto>();
     NoteDisplayDto note = new NoteDisplayDto
         {
@@ -103,34 +103,26 @@
 
     async Task checkPassNeed()
     {
-        if (notes.FirstOrDefault(i => i.NoteId == value).Secure)
+        if (notes.FirstOrDefault(i => i.NoteId == pressNoteId).Secure)
         {
             isSecure = true;
         }
         else
         {
             isSecure = false;
-            password = "";
+            credentials.Password = "";
         }
     }
 
     async Task getNoteDetails()
     {
-        ServiceResponse<NoteDisplayDto> srn = new ServiceResponse<NoteDisplayDto>();
+        var result = await Http.PostAsJsonAsync($"https://localhost:7288/api/Note/note-by-user?id={pressNoteId}", credentials);
 
-        if (password == "")
-            srn = await Http.GetFromJsonAsync<ServiceResponse<NoteDisplayDto>>($"https://localhost:7288/api/Note/note-by-user?id={value}&notePassword=dummypass");
-        else
-            srn = await Http.GetFromJsonAsync<ServiceResponse<NoteDisplayDto>>($"https://localhost:7288/api/Note/note-by-user?id={value}&notePassword={password}");
-        //isSecure = false;
-        if (srn.Success)
+        if (result.IsSuccessStatusCode)
         {
-            note = srn.Data;
-        }
-        else
-        {
-        }
+            note = await result.Content.ReadFromJsonAsync<NoteDisplayDto>();
 
+        }
     }
     async Task addNote()
     {
@@ -143,7 +135,7 @@
                 Secure = false,
             };
         notePassword = "";
-        value = -4;
+        pressNoteId = -4;
     }
     async Task saveNewNote()
     {

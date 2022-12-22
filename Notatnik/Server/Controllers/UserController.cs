@@ -9,6 +9,8 @@ namespace Notatnik.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[ValidateAntiForgeryToken]
+    [Authorize(Roles = "User")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -18,7 +20,7 @@ namespace Notatnik.Server.Controllers
             _userService = userService;
         }
 
-        [HttpPost("create-user-note"), Authorize(Roles = "User")]
+        [HttpPost("create-user-note")]
         public async Task<ActionResult<ServiceResponse<NoteDto>>> CreateUserNote(NoteDto noteDto)
         {
             var response = await _userService.CreateUserNote(noteDto);

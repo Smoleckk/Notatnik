@@ -10,6 +10,8 @@ namespace Notatnik.Server.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "User")]
+    //[ValidateAntiForgeryToken]
+
     public class NoteController : ControllerBase
     {
         private readonly INoteService _noteService;
@@ -18,7 +20,6 @@ namespace Notatnik.Server.Controllers
         {
             _noteService = noteService;
         }
-
         [HttpGet, Authorize(Roles = "User")]
         public async Task<ActionResult<List<NoteDisplayDto>>> GetNotes()
         {
@@ -41,15 +42,15 @@ namespace Notatnik.Server.Controllers
             return Ok(response.Data.ToArray());
         }
 
-        [HttpGet("note-by-user")]
-        public async Task<ActionResult<NoteDisplayDto>> GetNote(int id, string notePassword)
+        [HttpPost("note-by-user")]
+        public async Task<ActionResult<NoteDisplayDto>> GetNote(int id, Credentials credentials)
         {
-            var response = await _noteService.GetNoteDetails(id, notePassword);
-            //if (!response.Success)
-            //{
-            //    return NotFound(response);
-            //}
-            return Ok(response);
+            var response = await _noteService.GetNoteDetails(id, credentials);
+            if (!response.Success)
+            {
+                return NotFound(response);
+            }
+            return Ok(response.Data);
         }
     }
 }
