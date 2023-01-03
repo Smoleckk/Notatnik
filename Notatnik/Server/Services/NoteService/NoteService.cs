@@ -89,7 +89,7 @@ namespace Notatnik.Server.Services.NoteService
             if (note.Secure == false)
             {
                 response.Data = noteDisplayDto;
-                response.Message = "Success, your note is not secure";
+                response.Message = "Success, you get not without secure";
                 return response;
 
             }
@@ -102,7 +102,7 @@ namespace Notatnik.Server.Services.NoteService
             }
             noteDisplayDto.Body = EncryptDecryptManager.Decrypt(note.Body);
             response.Data = noteDisplayDto;
-            response.Message = "Success, your note is secure";
+            response.Message = "Success, you get not with secure";
             return response;
 
         }

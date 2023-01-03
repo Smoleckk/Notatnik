@@ -6,11 +6,12 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @attribute [Authorize]
-<RadzenButton Click=@addNote Text="Add new note" ButtonStyle="ButtonStyle.Dark" />
+<RadzenButton Click=@Clear Text="Add new note" ButtonStyle="ButtonStyle.Dark" />
 
 <div class="container-fluid">
     <div class="row px-3">
         <div class="col-md-3 p-3">
+
             <RadzenCard>
                 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Notatki</RadzenText>
                 <RadzenListBox @bind-Value=@pressNoteId Data=@notes TextProperty="Title" ValueProperty="NoteId" Change=@checkPassNeed Style="height:200px" Class="w-100" />
@@ -20,6 +21,7 @@
                 <RadzenCard>
                     <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">To see this note, enter password</RadzenText>
                     <RadzenPassword Placeholder="Enter password..." @bind-Value=@credentials.Password Class="w-100" />
+                    @*<ValidationMessage For="@(() => credentials.Password)" />*@
                 </RadzenCard>
             }
             @if (pressNoteId > 0)
@@ -67,8 +69,8 @@
             @if (note.NoteId == -1)
             {
                 <RadzenButton Click=@saveNewNote Text="Save note!" ButtonStyle="ButtonStyle.Dark" />
-
             }
+
         </div>
     </div>
 </div>
@@ -83,15 +85,10 @@
             NoteId = -1,
             Secure = false
         };
-    private string surname;
-    private string notePassword;
+    private string notePassword = "";
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        surname = user.Identity.Name;
         notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note/notes-by-user");
     }
     void SecureNote()
@@ -101,17 +98,14 @@
     }
 
 
-    async Task checkPassNeed()
+    void checkPassNeed()
     {
+        credentials.Password = "";
+
         if (notes.FirstOrDefault(i => i.NoteId == pressNoteId).Secure)
-        {
             isSecure = true;
-        }
         else
-        {
             isSecure = false;
-            credentials.Password = "";
-        }
     }
 
     async Task getNoteDetails()
@@ -124,7 +118,7 @@
 
         }
     }
-    async Task addNote()
+    void Clear()
     {
         note = new NoteDisplayDto
             {
