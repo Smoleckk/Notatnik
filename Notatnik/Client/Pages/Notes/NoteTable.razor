@@ -6,7 +6,9 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @attribute [Authorize]
-<RadzenButton Click=@Clear Text="Add new note" ButtonStyle="ButtonStyle.Dark" />
+<RadzenButton Click=@Clear Text="Add secure note" ButtonStyle="ButtonStyle.Dark" />
+<RadzenButton Click=@Clear2 Text="Add note" ButtonStyle="ButtonStyle.Dark" />
+
 
 <div class="container-fluid">
     <div class="row px-3">
@@ -76,6 +78,10 @@
 </div>
 
 @code {
+    void Register()
+    {
+        NavManager.NavigateTo("/add-secure-note");
+    }
     int pressNoteId = 0;
     bool isSecure = false;
     Credentials credentials = new();
@@ -85,6 +91,7 @@
             NoteId = -1,
             Secure = false
         };
+
     private string notePassword = "";
 
     protected override async Task OnInitializedAsync()
@@ -118,7 +125,8 @@
 
         }
     }
-    void Clear()
+
+    async Task Clear()
     {
         note = new NoteDisplayDto
             {
@@ -130,6 +138,23 @@
             };
         notePassword = "";
         pressNoteId = -4;
+        NavManager.NavigateTo("/add-secure-note");
+
+    }
+    async Task Clear2()
+    {
+        note = new NoteDisplayDto
+            {
+                NoteId = -1,
+                Title = "",
+                Body = "",
+                Public = true,
+                Secure = false,
+            };
+        notePassword = "";
+        pressNoteId = -4;
+        NavManager.NavigateTo("/add-note");
+
     }
     async Task saveNewNote()
     {

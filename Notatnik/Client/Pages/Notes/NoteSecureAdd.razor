@@ -1,0 +1,84 @@
+﻿@page "/add-secure-note"
+@using Notatnik.Server
+@using Notatnik.Shared
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+@*<RadzenButton Click=@Clear Text="Add new note" ButtonStyle="ButtonStyle.Dark" />*@
+
+<div class="container-fluid">
+    <div class="row px-3">
+        <div class="col-md-9 p-3">
+            <EditForm Model="noteDto" OnValidSubmit="OnSubmit">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label for="title">Podaj tytul notatki</label>
+                    <InputText id="title" @bind-Value="noteDto.Title" class="form-control" />
+                    <ValidationMessage For="@(() => noteDto.Title)" />
+                </div>
+                <label for="title">Podaj ciało notatki</label>
+                <RadzenHtmlEditor @bind-Value=@noteDto.Body style="height: 500px; margin-bottom: 1rem;">
+                    <RadzenHtmlEditorUndo />
+                    <RadzenHtmlEditorRedo />
+                    <RadzenHtmlEditorSeparator />
+                    <RadzenHtmlEditorBold />
+                    <RadzenHtmlEditorItalic />
+                    <RadzenHtmlEditorUnderline />
+                    <RadzenHtmlEditorStrikeThrough />
+                    <RadzenHtmlEditorSeparator />
+                    <RadzenHtmlEditorColor />
+                    <RadzenHtmlEditorBackground />
+                    <RadzenHtmlEditorRemoveFormat />
+                </RadzenHtmlEditor>
+                <div class="mb-3">
+                    <label for="password">Podaj haslo notatki</label>
+                    <InputText id="password" @bind-Value="noteDto.Password" class="form-control" />
+                    <ValidationMessage For="@(() => noteDto.Password)" />
+                </div>
+                <button type="submit" class="btn btn-primary">Dodaj zaszyfrowana notatke</button>
+                <div class="text-danger">
+                    <span>@errorMessage</span>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    NoteDto noteDto = new NoteDto
+        {
+            Secure = true,
+            Public = false
+        };
+    private string errorMessage = string.Empty;
+
+    async Task OnSubmit()
+    {
+
+        var result = await Http.PostAsJsonAsync($"https://localhost:7288/api/User/create-user-note", noteDto);
+
+        noteDto = new NoteDto
+            {
+                Secure = true,
+                Public = false
+            };
+
+        if (!result.IsSuccessStatusCode)
+        {
+            errorMessage = await result.Content.ReadAsStringAsync();
+            Console.WriteLine($"There was an error! {errorMessage}");
+            return;
+        }
+
+        NavigationManager.NavigateTo($"/notes");
+
+
+    }
+
+
+
+
+}
