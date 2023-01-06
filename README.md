@@ -4,14 +4,24 @@ dzięki czemu mogą być one bezpiecznie przechowywane i udostępniane. Aplikacj
 o prostocie obsługi i szybkim dostępie do notatek. Możliwe jest również dodawanie notatek w formacie markdown,
 co umożliwia lepsze formatowanie tekstu i dodawanie elementów takich jak linki czy listy.
 
+### Wymagania
+Aby skorzystać z tej aplikacji, potrzebujesz:
+* Docker
+
 ### Instalacja
 Aby uruchomić aplikację za pomocą Dockera, należy:
 1. Sklonowac repozytorium:
-git clone https://github.com/Smoleckk/Notatnik.git
-2. Build the Docker image:
-cd Notatnik/Server
-docker build -t secure-notes-app .
-Run the Docker container:
+-git clone https://github.com/Smoleckk/Notatnik.git
+2. Przejść do folderu z apliakcja:
+-cd Notatnik/Server
+2. Zbudowac obraz za pomoca komedy:
+- docker-compose build
+3. Uruchomić kontener za pomocą komendy:
+- docker-compose up
+4. Dostęp do aplikacji będziemy mieli na porcie 5000
+- https://localhost:5000/login
+5. Na koniec możemy wyłączyc kontener:
+- docker-compose down
 
 
 ### Użytkowanie
