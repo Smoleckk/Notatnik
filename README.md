@@ -36,8 +36,8 @@ Aplikacja została napisana w języku C# z wykorzystaniem framework'u .NET 6 API
 Do przechowywania danych wykorzystujemy bazę danych MS SQL, a całość jest zcontainerowana za pomocą Dockera.
 
 ### Bezpieczeństwo
-Bezpieczeństwo twoich notatek jest dla nas priorytetem. Dlatego wszystkie notatki są szyfrowane za pomocą silnego algorytmu szyfrującego,
-a hasła są przechowywane w sposób zabezpieczony przed wyciekiem.
+Bezpieczeństwo twoich notatek jest priorytetem. Dlatego wszystkie notatki są szyfrowane za pomocą silnego algorytmu szyfrującego,
+a hasła są haszowane i przechowywane w sposób zabezpieczony przed wyciekiem.
 
 ##### Sposób zabezpieczenia aplikacji:
 * bezpieczne połączenie z aplikacją poprzez protokół https,
