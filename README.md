@@ -26,3 +26,16 @@ Do przechowywania danych wykorzystujemy bazę danych MS SQL, a całość jest zc
 ### Bezpieczeństwo
 Bezpieczeństwo twoich notatek jest dla nas priorytetem. Dlatego wszystkie notatki są szyfrowane za pomocą silnego algorytmu szyfrującego,
 a hasła są przechowywane w sposób zabezpieczony przed wyciekiem.
+
+##### Sposób zabezpieczenia aplikacji:
+* bezpieczne połączenie z aplikacją poprzez protokół https,
+* wszystkie dane wejściowe od użytkownika podlegają walidacji z negatywnym nastawieniem,
+* weryfikowany jest dostęp użytkowników do zasobów,
+* weryfikacja liczby nieudanych prób logowania,
+* sprawdzanie jakości hasła poprzez entropie,
+* opóźnienie podczas logowania po nieudanych probach,
+* ograniczone informowanie o błędach,
+* bezpieczne przechowywanie hasła, wykorzystanie algorytmu skrótu szyfrowania SHA-512
+
+##### Sposób zabezpieczenia notatek:
+* wykorzysatnie szyfrowania za pomoca AES z trybem CBC
