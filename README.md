@@ -1,4 +1,5 @@
-# Notatnik - ### aplikacja internetowa do przechowywania szyfrowanych notatek
+# Notatnik - 
+### aplikacja internetowa do przechowywania szyfrowanych notatek
 Ta aplikacja internetowa pozwala na przechowywanie notatek w sposób szyfrowany,
 dzięki czemu mogą być one bezpiecznie przechowywane i udostępniane. Aplikacja została zaprojektowana z myślą
 o prostocie obsługi i szybkim dostępie do notatek. Możliwe jest również dodawanie notatek w formacie markdown,
