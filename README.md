@@ -4,13 +4,6 @@ dzięki czemu mogą być one bezpiecznie przechowywane i udostępniane. Aplikacj
 o prostocie obsługi i szybkim dostępie do notatek. Możliwe jest również dodawanie notatek w formacie markdown,
 co umożliwia lepsze formatowanie tekstu i dodawanie elementów takich jak linki czy listy.
 
-### Wymagania
-Aby skorzystać z tej aplikacji, potrzebujesz:
-
-* Dostępu do Internetu
-* Przeglądarki internetowej obsługującej JavaScript
-* Zainstalowanego Dockera na swoim komputerze (https://www.docker.com/)
-
 ### Instalacja
 Aby uruchomić aplikację za pomocą Dockera, należy:
 1. Sklonowac repozytorium:
