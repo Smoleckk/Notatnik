@@ -17,7 +17,7 @@ Aby uruchomić aplikację za pomocą Dockera, należy:
 3. Zbudowac obraz za pomoca komedy: `docker-compose build`
 4. Uruchomić kontener za pomocą komendy: `docker-compose up`
 5. Dostęp do aplikacji będziemy mieli na porcie 5000: `https://localhost:5000/login`
-6. Na koniec możemy wyłączyc kontener: `docker-compose down`
+6. Na koniec możemy wyłączyc kontener: `docker-compose down` lub `ctrl + c`
 
 
 ## Użytkowanie
