@@ -13,21 +13,18 @@ Aby skorzystać z tej aplikacji, potrzebujesz:
 
 ### Instalacja
 Aby uruchomić aplikację za pomocą Dockera, należy:
-
-#### Sklonowac repozytorium:
+1. Sklonowac repozytorium:
 git clone https://github.com/Smoleckk/Notatnik.git
-#### Build the Docker image:
+2. Build the Docker image:
 cd Notatnik/Server
 docker build -t secure-notes-app .
 Run the Docker container:
-Copy code
-docker run -p 8080:80 --name secure-notes-app-container secure-notes-app
-The app should now be running on your local machine at http://localhost:8080.
+
 
 ### Użytkowanie
 Po założeniu konta i zalogowaniu się do aplikacji, możesz zacząć tworzyć i przechowywać swoje szyfrowane notatki.
 Aby utworzyć nową notatkę, wystarczy kliknąć na przycisk "Nowa notatka" i wprowadzić tekst do pola tekstowego.
-Po zapisaniu notatki, będzie ona szyfrowana i przechowywana w bezpieczny sposób.
+W zależności od wyboru sposobu przechowywania notatki, będzie ona szyfrowana i przechowywana w bezpieczny sposób.
 
 ### Technologie
 Aplikacja została napisana w języku C# z wykorzystaniem framework'u .NET 6 API oraz technologii Blazor do tworzenia aplikacji internetowych.
