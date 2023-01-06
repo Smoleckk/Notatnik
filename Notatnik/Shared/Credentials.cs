@@ -9,7 +9,8 @@ namespace Notatnik.Shared
 {
     public class Credentials
     {
-        //[MinLength(4)]
-        public string Password { get; set; } = string.Empty;
+        //[Required]
+        [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Allowed only leters, numbers and")]
+        public string Password { get; set; }
     }
 }

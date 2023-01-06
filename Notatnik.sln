@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notatnik.Client", "Notatnik
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notatnik.Shared", "Notatnik\Shared\Notatnik.Shared.csproj", "{DCD5FD68-31A5-44B0-8736-4FD735E4BCAD}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{56C6CBDD-012D-4406-867B-539B3C27E4FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{DCD5FD68-31A5-44B0-8736-4FD735E4BCAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCD5FD68-31A5-44B0-8736-4FD735E4BCAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCD5FD68-31A5-44B0-8736-4FD735E4BCAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56C6CBDD-012D-4406-867B-539B3C27E4FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56C6CBDD-012D-4406-867B-539B3C27E4FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56C6CBDD-012D-4406-867B-539B3C27E4FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56C6CBDD-012D-4406-867B-539B3C27E4FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

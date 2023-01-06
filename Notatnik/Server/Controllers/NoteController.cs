@@ -48,7 +48,7 @@ namespace Notatnik.Server.Controllers
             var response = await _noteService.GetNoteDetails(id, credentials);
             if (!response.Success)
             {
-                return NotFound(response);
+                return BadRequest(response.Message);
             }
             return Ok(response.Data);
         }

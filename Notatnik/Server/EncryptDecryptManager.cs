@@ -5,15 +5,16 @@ namespace Notatnik.Server
 {
     public class EncryptDecryptManager
     {
-        private readonly static string key = "01234567890123456789012345678901";
+        private readonly static byte[] key = Encoding.UTF8.GetBytes("01234567890123456789012345678901");
+        private readonly static byte[] iv = Encoding.UTF8.GetBytes("0123456789012345");
         public static string Encrypt(string text)
         {
-            byte[] iv = new byte[16];
             byte[] array;
             using (Aes aes = Aes.Create())
             {
-                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.Key = key;
                 aes.IV = iv;
+                aes.Mode = CipherMode.CBC;
                 ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
                 using (MemoryStream ms = new MemoryStream())
                 {
@@ -31,12 +32,12 @@ namespace Notatnik.Server
         }
         public static string Decrypt(string text)
         {
-            byte[] iv = new byte[16];
             byte[] buffer = Convert.FromBase64String(text);
             using (Aes aes = Aes.Create())
             {
-                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.Key = key;
                 aes.IV = iv;
+                aes.Mode = CipherMode.CBC;
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
                 using (MemoryStream ms = new MemoryStream(buffer))
                 {

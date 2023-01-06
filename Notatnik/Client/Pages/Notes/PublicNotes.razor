@@ -15,6 +15,11 @@
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@((MarkupString)n.Body)</RadzenText>
             </RadzenCard>
     }
+
+}
+else
+{
+    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">There is any public notes to dispaly</RadzenText>
 }
 
 
@@ -26,6 +31,6 @@
     protected override async Task OnInitializedAsync()
     {
 
-        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note");
+        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"/api/Note");
     }
 }

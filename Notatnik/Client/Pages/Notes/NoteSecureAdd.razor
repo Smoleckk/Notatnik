@@ -58,7 +58,7 @@
     async Task OnSubmit()
     {
 
-        var result = await Http.PostAsJsonAsync($"https://localhost:7288/api/User/create-user-note", noteDto);
+        var result = await Http.PostAsJsonAsync($"/api/User/create-user-note", noteDto);
 
         noteDto = new NoteDto
             {

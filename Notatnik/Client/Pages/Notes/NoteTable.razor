@@ -6,56 +6,52 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @attribute [Authorize]
-<RadzenButton Click=@Clear Text="Add secure note" ButtonStyle="ButtonStyle.Dark" />
-<RadzenButton Click=@Clear2 Text="Add note" ButtonStyle="ButtonStyle.Dark" />
-
+<RadzenButton Click=@AddNote Text="Add secure note" ButtonStyle="ButtonStyle.Dark" />
+<RadzenButton Click=@AddSecureNote Text="Add note" ButtonStyle="ButtonStyle.Dark" />
 
 <div class="container-fluid">
     <div class="row px-3">
         <div class="col-md-3 p-3">
-
-            <RadzenCard>
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Notatki</RadzenText>
-                <RadzenListBox @bind-Value=@pressNoteId Data=@notes TextProperty="Title" ValueProperty="NoteId" Change=@checkPassNeed Style="height:200px" Class="w-100" />
-            </RadzenCard>
-            @if (isSecure && pressNoteId > 0)
+            @if (notes != null)
             {
                 <RadzenCard>
-                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">To see this note, enter password</RadzenText>
-                    <RadzenPassword Placeholder="Enter password..." @bind-Value=@credentials.Password Class="w-100" />
-                    @*<ValidationMessage For="@(() => credentials.Password)" />*@
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Notatki</RadzenText>
+                    <RadzenListBox @bind-Value=@pressNoteId Data=@notes TextProperty="Title" ValueProperty="NoteId" Change=@checkPassNeed Style="height:200px" Class="w-100" />
                 </RadzenCard>
             }
-            @if (pressNoteId > 0)
+            else
             {
-                <RadzenButton Click=@getNoteDetails Text="Show note details" ButtonStyle="ButtonStyle.Dark" />
-
+                <RadzenCard>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Notatki</RadzenText>
+                    <RadzenListBox @bind-Value=@pressNoteId TextProperty="Title" ValueProperty="NoteId" Change=@checkPassNeed Style="height:200px" Class="w-100" />
+                </RadzenCard>
             }
 
+            @if (isSecure && pressNoteId > 0)
+            {
+                <EditForm Model="credentials" OnValidSubmit="getNoteDetails">
+                    <DataAnnotationsValidator />
+                    <div class="mb-3">
+                        <label for="password">Podaj haslo notatki</label>
+                        <InputText id="password" @bind-Value="credentials.Password" type="password" class="form-control" />
+                        <ValidationMessage For="@(() => credentials.Password)" />
+                    </div>
+                    <div class="text-danger">
+                        <span>@errorMessage</span>
+                    </div>
+                    <RadzenButton type="submit" Text="Show note details" ButtonStyle="ButtonStyle.Dark" />
+                </EditForm>
+            }
+            @if (pressNoteId > 0 && !isSecure)
+            {
+                <RadzenButton Click=@getNoteDetails Text="Show note details" ButtonStyle="ButtonStyle.Dark" />
+            }
         </div>
         <div class="col-md-9 p-3">
             <RadzenCard Class="mb-3">
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Podaj tytul notatki</RadzenText>
-                <RadzenTextBox @bind-Value=@note.Title Class="w-100" />
+                <RadzenTextBox Disabled @bind-Value=@note.Title Class="w-100" />
             </RadzenCard>
-            @if (note.NoteId == -1)
-            {
-                <RadzenCard>
-                    <RadzenCheckBox @bind-Value=@note.Secure Name="CheckBox1" TValue="bool" Change=@SecureNote />
-                    <RadzenLabel Text="Zaszyfrowac notatke?" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;" />
-                    @if (!note.Secure)
-                    {
-                        <RadzenCheckBox @bind-Value=@note.Public Name="CheckBox1" TValue="bool" />
-                        <RadzenLabel Text="Czy publiczna" Component="CheckBox1" Style="margin-left: 8px; vertical-align: middle;" />
-                    }
-                    else
-                    {
-                        <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Podaj haslo notatki</RadzenText>
-                        <RadzenTextBox @bind-Value=@notePassword Class="w-100" />
-                    }
-                </RadzenCard>
-            }
-            <RadzenHtmlEditor @bind-Value=@note.Body style="height: 500px; margin-bottom: 1rem;">
+            <RadzenHtmlEditor Disabled @bind-Value=@note.Body style="height: 500px; margin-bottom: 1rem;">
                 <RadzenHtmlEditorUndo />
                 <RadzenHtmlEditorRedo />
                 <RadzenHtmlEditorSeparator />
@@ -68,23 +64,20 @@
                 <RadzenHtmlEditorBackground />
                 <RadzenHtmlEditorRemoveFormat />
             </RadzenHtmlEditor>
-            @if (note.NoteId == -1)
-            {
-                <RadzenButton Click=@saveNewNote Text="Save note!" ButtonStyle="ButtonStyle.Dark" />
-            }
 
         </div>
     </div>
 </div>
 
 @code {
-    void Register()
-    {
-        NavManager.NavigateTo("/add-secure-note");
-    }
     int pressNoteId = 0;
     bool isSecure = false;
+    private string notePassword = "";
+
+    private string errorMessage = string.Empty;
+
     Credentials credentials = new();
+
     List<NoteDisplayDto> notes = new List<NoteDisplayDto>();
     NoteDisplayDto note = new NoteDisplayDto
         {
@@ -92,11 +85,9 @@
             Secure = false
         };
 
-    private string notePassword = "";
-
     protected override async Task OnInitializedAsync()
     {
-        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note/notes-by-user");
+        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"/api/Note/notes-by-user");
     }
     void SecureNote()
     {
@@ -117,16 +108,22 @@
 
     async Task getNoteDetails()
     {
-        var result = await Http.PostAsJsonAsync($"https://localhost:7288/api/Note/note-by-user?id={pressNoteId}", credentials);
+
+        var result = await Http.PostAsJsonAsync($"/api/Note/note-by-user?id={pressNoteId}", credentials);
 
         if (result.IsSuccessStatusCode)
         {
             note = await result.Content.ReadFromJsonAsync<NoteDisplayDto>();
-
+            errorMessage = "";
+            pressNoteId = 0;
+        }
+        else
+        {
+            errorMessage = await result.Content.ReadAsStringAsync();
         }
     }
 
-    async Task Clear()
+    async Task AddNote()
     {
         note = new NoteDisplayDto
             {
@@ -141,7 +138,7 @@
         NavManager.NavigateTo("/add-secure-note");
 
     }
-    async Task Clear2()
+    async Task AddSecureNote()
     {
         note = new NoteDisplayDto
             {
@@ -156,29 +153,4 @@
         NavManager.NavigateTo("/add-note");
 
     }
-    async Task saveNewNote()
-    {
-
-        NoteDto noteDto = new NoteDto
-            {
-                Title = note.Title,
-                Body = note.Body,
-                Secure = note.Secure,
-                Public = note.Public,
-                Password = notePassword
-            };
-        note.Title = "";
-        note.Body = "";
-        note.Public = false;
-        note.Secure = false;
-        notePassword = "";
-
-
-        await Http.PostAsJsonAsync($"https://localhost:7288/api/User/create-user-note", noteDto);
-        notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"https://localhost:7288/api/Note/notes-by-user");
-
-    }
-
-
-
 }

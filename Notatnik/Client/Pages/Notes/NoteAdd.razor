@@ -36,7 +36,10 @@
                     <RadzenHtmlEditorColor />
                     <RadzenHtmlEditorBackground />
                     <RadzenHtmlEditorRemoveFormat />
+                    <RadzenHtmlEditorFormatBlock />
+
                 </RadzenHtmlEditor>
+                @*<RadzenHtmlEditor @bind-Value=@value />*@
                 <button type="submit" class="btn btn-primary">Dodaj notatke</button>
                 <div class="text-danger">
                     <span>@errorMessage</span>
@@ -47,6 +50,21 @@
 </div>
 
 @code {
+    //string value = @"123";
+    //void OnPaste(HtmlEditorPasteEventArgs args)
+    //{
+    //    Console.WriteLine($"Paste: {args.Html}");
+    //}
+
+    //void OnChange(string html)
+    //{
+    //    Console.WriteLine($"Change: {html}");
+    //}
+
+    //void OnExecute(HtmlEditorExecuteEventArgs args)
+    //{
+    //    Console.WriteLine($"Execute: {args.CommandName}");
+    //}
     NoteDto noteDto = new NoteDto
         {
             Secure = false,
@@ -58,7 +76,7 @@
     async Task OnSubmit()
     {
 
-        var result = await Http.PostAsJsonAsync($"https://localhost:7288/api/User/create-user-note", noteDto);
+        var result = await Http.PostAsJsonAsync($"/api/User/create-user-note", noteDto);
 
         noteDto = new NoteDto
             {
