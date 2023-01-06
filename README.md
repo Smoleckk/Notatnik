@@ -12,18 +12,12 @@ Aby skorzystać z tej aplikacji, potrzebujesz:
 
 ## Instalacja
 Aby uruchomić aplikację za pomocą Dockera, należy:
-1. Sklonowac repozytorium:
-- git clone https://github.com/Smoleckk/Notatnik.git
-2. Przejść do folderu z apliakcja:
-- cd Notatnik/Server
-2. Zbudowac obraz za pomoca komedy:
-- docker-compose build
-3. Uruchomić kontener za pomocą komendy:
-- `docker-compose up`
-4. Dostęp do aplikacji będziemy mieli na porcie 5000
-- https://localhost:5000/login
-5. Na koniec możemy wyłączyc kontener:
-- docker-compose down
+1. Sklonowac repozytorium: `git clone https://github.com/Smoleckk/Notatnik.git`
+2. Przejść do folderu z apliakcja: `cd Notatnik/Server`
+3. Zbudowac obraz za pomoca komedy: `docker-compose build`
+4. Uruchomić kontener za pomocą komendy: `docker-compose up`
+5. Dostęp do aplikacji będziemy mieli na porcie 5000: `https://localhost:5000/login`
+6. Na koniec możemy wyłączyc kontener: `docker-compose down`
 
 
 ## Użytkowanie
