@@ -29,7 +29,9 @@ namespace Notatnik.Server.Services.UserService
 
             if (noteDto.Secure)
             {
-                note.Body = EncryptDecryptManager.Encrypt(noteDto.Body);
+                //note.Body = EncryptDecryptManager.Encrypt(noteDto.Body);
+                note.Body = EncryptDecryptGCM.Encrypt(noteDto.Body);
+
                 note.Secure = noteDto.Secure;
                 note.Public = false;
                 note.NoteHash = passwordHash;

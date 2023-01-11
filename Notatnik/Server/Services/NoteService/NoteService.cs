@@ -100,7 +100,7 @@ namespace Notatnik.Server.Services.NoteService
                 return response;
 
             }
-            noteDisplayDto.Body = EncryptDecryptManager.Decrypt(note.Body);
+            noteDisplayDto.Body = EncryptDecryptGCM.Decrypt(note.Body);
             response.Data = noteDisplayDto;
             response.Message = "Success, you get not with secure";
             return response;

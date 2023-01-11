@@ -18,7 +18,8 @@ services:
         environment:
             SA_PASSWORD: "Your_password123"
             ACCEPT_EULA: "Y"
+        ports:
+        - "6543:1433"
         networks:
             - paczkomat
-
 
