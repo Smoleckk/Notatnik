@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Notatnik.Server.Data;
@@ -7,6 +8,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Notatnik.Server.Services.AuthService
@@ -17,6 +19,11 @@ namespace Notatnik.Server.Services.AuthService
         private readonly DataContext _context;
         const int MaxNumberOfFailedAttemptsToLogin = 10;
         const int BlockMinutesAfterLimitFailedAttemptsToLogin = 10;
+
+        const int keySize = 64;
+        const int iterations = 350000;
+        HashAlgorithmName hashAlgorithm = HashAlgorithmName.SHA512;
+
         public AuthService(IConfiguration config, DataContext context)
         {
             _config = config;
@@ -35,11 +42,14 @@ namespace Notatnik.Server.Services.AuthService
                 response.Data = request;
                 return response;
             }
-            CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            //CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            HashPasword(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             user.Email = request.Email;
             user.Username = request.Username;
             user.VerificationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+            //user.PasswordHash = passwordHash;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.Notes = new List<Note>();
@@ -82,10 +92,11 @@ namespace Notatnik.Server.Services.AuthService
             }
 
 
-            if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            //if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPassword(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 response.Success = false;
-                response.Message = "Wrong credentials";
+                response.Message = "Wrong credentials password";
                 user.NumberOfLoginTry++;
                 _context.Update(user);
                 await _context.SaveChangesAsync();
@@ -136,21 +147,37 @@ namespace Notatnik.Server.Services.AuthService
             return jwt;
         }
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        //private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        //{
+        //    using (var hmac = new HMACSHA512())
+        //    {
+        //        passwordSalt = hmac.Key;
+        //        passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        //    }
+        //}
+        //private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        //{
+        //    using (var hmac = new HMACSHA512(passwordSalt))
+        //    {
+        //        var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        //        return computeHash.SequenceEqual(passwordHash);
+        //    }
+        //}
+
+        void HashPasword(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
+            passwordSalt = RandomNumberGenerator.GetBytes(keySize);
+            passwordHash = Rfc2898DeriveBytes.Pbkdf2(
+                Encoding.UTF8.GetBytes(password),
+                passwordSalt,
+                iterations,
+                hashAlgorithm,
+                keySize);
         }
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        bool VerifyPassword(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computeHash.SequenceEqual(passwordHash);
-            }
+            var hashToCompare = Rfc2898DeriveBytes.Pbkdf2(password, passwordSalt, iterations, hashAlgorithm, keySize);
+            return hashToCompare.SequenceEqual(passwordHash);
         }
     }
 }
