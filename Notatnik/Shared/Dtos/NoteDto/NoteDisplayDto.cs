@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Notatnik.Shared
+namespace Notatnik.Shared.Dtos.NoteDto
 {
     public class NoteDisplayDto
     {

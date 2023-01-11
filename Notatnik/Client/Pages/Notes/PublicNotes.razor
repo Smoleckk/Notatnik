@@ -1,7 +1,9 @@
 ﻿@page "/public-notes"
+@using Notatnik.Shared.Dtos.NoteDto;
 @inject HttpClient Http
 @inject NavigationManager NavManager
 @attribute [Authorize]
+@using Ganss.Xss;
 
 <h1>Public notes</h1>
 
@@ -12,7 +14,7 @@
     {
         <RadzenCard>
             <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@n.Title</RadzenText>
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@((MarkupString)n.Body)</RadzenText>
+            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@(((MarkupString)n.Body))</RadzenText>
             </RadzenCard>
     }
 
@@ -25,12 +27,14 @@ else
 
 
 @code {
-
     List<NoteDisplayDto> notes = new List<NoteDisplayDto>();
-
     protected override async Task OnInitializedAsync()
     {
+        var sanitizer = new HtmlSanitizer();
 
         notes = await Http.GetFromJsonAsync<List<NoteDisplayDto>>($"/api/Note");
+
+        notes.ForEach(e => e.Body = sanitizer.Sanitize(e.Body));
+
     }
 }

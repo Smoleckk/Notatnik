@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Notatnik.Shared;
+using Notatnik.Shared.Dtos.UserDto;
 
 namespace Notatnik.Server.Services.AuthService
 {

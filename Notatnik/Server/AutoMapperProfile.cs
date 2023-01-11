@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Notatnik.Shared;
+using Notatnik.Shared.Dtos.NoteDto;
+using Notatnik.Shared.Models;
 using System;
 
 namespace Notatnik.Server

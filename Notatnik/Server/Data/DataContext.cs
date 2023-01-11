@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Notatnik.Shared.Models;
 
 namespace Notatnik.Server.Data
 {

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Notatnik.Server.Data;
 using Notatnik.Server.Services.UserService;
 using Notatnik.Shared;
+using Notatnik.Shared.Dtos.NoteDto;
 using System;
 using System.Security.Cryptography;
 

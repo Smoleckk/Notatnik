@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notatnik.Server.Data;
 using Notatnik.Shared;
+using Notatnik.Shared.Dtos.NoteDto;
+using Notatnik.Shared.Models;
 using System.Security.Cryptography;
 using static Azure.Core.HttpHeader;
 

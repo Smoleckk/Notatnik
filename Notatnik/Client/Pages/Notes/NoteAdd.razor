@@ -1,6 +1,7 @@
 ﻿@page "/add-note"
+@using Notatnik.Shared.Dtos.NoteDto;
 @using Notatnik.Server
-@using Notatnik.Shared
+@using Notatnik.Shared;
 @inject HttpClient Http
 @inject NavigationManager NavManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -75,7 +76,6 @@
 
     async Task OnSubmit()
     {
-
         var result = await Http.PostAsJsonAsync($"/api/User/create-user-note", noteDto);
 
         noteDto = new NoteDto
@@ -84,6 +84,7 @@
                 Public = false,
                 Password = "dummydefaultpass"
             };
+        Console.WriteLine(noteDto.Body);
 
         if (!result.IsSuccessStatusCode)
         {

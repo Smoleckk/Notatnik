@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Notatnik.Server.Data;
 using Notatnik.Shared;
+using Notatnik.Shared.Dtos.UserDto;
+using Notatnik.Shared.Models;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

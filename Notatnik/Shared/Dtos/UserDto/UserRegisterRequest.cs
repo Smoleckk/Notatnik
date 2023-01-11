@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Notatnik.Shared
+namespace Notatnik.Shared.Dtos.UserDto
 {
     public class UserRegisterRequest
     {
@@ -17,11 +17,11 @@ namespace Notatnik.Shared
         [RegularExpression(@"^[a-zA-Z0-9_.]*$", ErrorMessage = "Allowed only leters, numbers and _ .")]
         public string Username { get; set; } = string.Empty;
         [Required]
-        [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Allowed only leters, numbers and")]
+        [RegularExpression(@"^[a-zA-Z0-9_.]*$", ErrorMessage = "Allowed only leters, numbers and _ .")]
         //[ValidPass]
         public string Password { get; set; } = string.Empty;
         [Required, Compare("Password")]
-        [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Allowed only leters, numbers and")]
+        [RegularExpression(@"^[a-zA-Z0-9_.]*$", ErrorMessage = "Allowed only leters, numbers and _ .")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
     }

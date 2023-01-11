@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Notatnik.Server.Services.AuthService;
 using Notatnik.Server.Services.UserService;
 using Notatnik.Shared;
+using Notatnik.Shared.Dtos.UserDto;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

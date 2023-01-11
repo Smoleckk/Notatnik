@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Notatnik.Server.Services.UserService;
 using Notatnik.Shared;
+using Notatnik.Shared.Dtos.NoteDto;
 using System.Data;
 
 namespace Notatnik.Server.Controllers

@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Notatnik.Shared
+namespace Notatnik.Shared.Dtos.UserDto
 {
     public class UserLoginRequest
     {
         [Required, EmailAddress]
-        [RegularExpression(@"^[a-zA-Z0-9_.@]*$", ErrorMessage = "Allowed only leters, numbers and _ .")]
+        [RegularExpression(@"^[a-zA-Z0-9_.@]*$", ErrorMessage = "Allowed only leters, numbers and _ . @")]
         public string Email { get; set; } = string.Empty;
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9]*$", ErrorMessage = "Allowed only leters, numbers and")]

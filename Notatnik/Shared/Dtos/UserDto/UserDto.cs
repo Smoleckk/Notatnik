@@ -1,4 +1,4 @@
-﻿namespace Notatnik.Server
+﻿namespace Notatnik.Shared.Dtos.UserDto
 {
     public class UserDto
     {

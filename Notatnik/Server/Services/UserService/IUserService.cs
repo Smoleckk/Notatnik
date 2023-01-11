@@ -1,4 +1,5 @@
 ﻿using Notatnik.Shared;
+using Notatnik.Shared.Dtos.NoteDto;
 
 namespace Notatnik.Server.Services.UserService
 {

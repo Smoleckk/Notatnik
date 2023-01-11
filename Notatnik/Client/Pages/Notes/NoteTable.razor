@@ -1,9 +1,12 @@
 ﻿@page "/notes"
 @using Notatnik.Server
-@using Notatnik.Shared
+@using Notatnik.Shared;
+@using Notatnik.Shared.Dtos.NoteDto;
+
 @inject HttpClient Http
 @inject NavigationManager NavManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@using Ganss.Xss;
 
 @attribute [Authorize]
 <RadzenButton Click=@AddNote Text="Add secure note" ButtonStyle="ButtonStyle.Dark" />
@@ -48,28 +51,31 @@
             }
         </div>
         <div class="col-md-9 p-3">
-            <RadzenCard Class="mb-3">
-                <RadzenTextBox Disabled @bind-Value=@note.Title Class="w-100" />
+            @*<RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H2">@note.Title</RadzenText>*@
+            <RadzenText TextStyle="TextStyle.H3">@note.Title</RadzenText>
+            <RadzenText TextStyle="TextStyle.H5">@(((MarkupString)note.Body))</RadzenText>
+
+                @*            <RadzenCard Class="mb-3">
+            <RadzenTextBox Disabled @bind-Value=@note.Title Class="w-100" />
             </RadzenCard>
             <RadzenHtmlEditor Disabled @bind-Value=@note.Body style="height: 500px; margin-bottom: 1rem;">
-                <RadzenHtmlEditorUndo />
-                <RadzenHtmlEditorRedo />
-                <RadzenHtmlEditorSeparator />
-                <RadzenHtmlEditorBold />
-                <RadzenHtmlEditorItalic />
-                <RadzenHtmlEditorUnderline />
-                <RadzenHtmlEditorStrikeThrough />
-                <RadzenHtmlEditorSeparator />
-                <RadzenHtmlEditorColor />
-                <RadzenHtmlEditorBackground />
-                <RadzenHtmlEditorRemoveFormat />
-            </RadzenHtmlEditor>
-
+            <RadzenHtmlEditorUndo />
+            <RadzenHtmlEditorRedo />
+            <RadzenHtmlEditorSeparator />
+            <RadzenHtmlEditorBold />
+            <RadzenHtmlEditorItalic />
+            <RadzenHtmlEditorUnderline />
+            <RadzenHtmlEditorStrikeThrough />
+            <RadzenHtmlEditorSeparator />
+            <RadzenHtmlEditorColor />
+            <RadzenHtmlEditorBackground />
+            <RadzenHtmlEditorRemoveFormat />
+            </RadzenHtmlEditor>*@
+            </div>
         </div>
     </div>
-</div>
 
-@code {
+    @code {
     int pressNoteId = 0;
     bool isSecure = false;
     private string notePassword = "";
@@ -108,7 +114,8 @@
 
     async Task getNoteDetails()
     {
-
+        var sanitizer = new HtmlSanitizer();
+        //sanitizer.Sanitize(e.Body)
         var result = await Http.PostAsJsonAsync($"/api/Note/note-by-user?id={pressNoteId}", credentials);
 
         if (result.IsSuccessStatusCode)

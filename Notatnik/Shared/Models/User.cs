@@ -3,12 +3,14 @@ using System.Reflection.Metadata;
 using System.Xml.Linq;
 
 
-namespace Notatnik.Server
+namespace Notatnik.Shared.Models
 {
     public class User
     {
         public int UserId { get; set; }
+        [RegularExpression(@"^[a-zA-Z0-9_.@]*$", ErrorMessage = "Allowed only leters, numbers and _ . @")]
         public string Email { get; set; } = string.Empty;
+        [RegularExpression(@"^[a-zA-Z0-9_.]*$", ErrorMessage = "Allowed only leters, numbers and _ . ")]
         public string Username { get; set; } = string.Empty;
         public byte[] PasswordHash { get; set; } = new byte[32];
         public byte[] PasswordSalt { get; set; } = new byte[32];
