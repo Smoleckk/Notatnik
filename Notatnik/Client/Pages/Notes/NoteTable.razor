@@ -64,24 +64,6 @@
                         </RadzenCard>
                     </div>
             }
-
-
-            @*            <RadzenCard Class="mb-3">
-            <RadzenTextBox Disabled @bind-Value=@note.Title Class="w-100" />
-            </RadzenCard>
-            <RadzenHtmlEditor Disabled @bind-Value=@note.Body style="height: 500px; margin-bottom: 1rem;">
-            <RadzenHtmlEditorUndo />
-            <RadzenHtmlEditorRedo />
-            <RadzenHtmlEditorSeparator />
-            <RadzenHtmlEditorBold />
-            <RadzenHtmlEditorItalic />
-            <RadzenHtmlEditorUnderline />
-            <RadzenHtmlEditorStrikeThrough />
-            <RadzenHtmlEditorSeparator />
-            <RadzenHtmlEditorColor />
-            <RadzenHtmlEditorBackground />
-            <RadzenHtmlEditorRemoveFormat />
-            </RadzenHtmlEditor>*@
         </div>
     </div>
 </div>
@@ -126,7 +108,6 @@
     async Task getNoteDetails()
     {
         var sanitizer = new HtmlSanitizer();
-        //sanitizer.Sanitize(e.Body)
         var result = await Http.PostAsJsonAsync($"/api/Note/note-by-user?id={pressNoteId}", credentials);
 
         if (result.IsSuccessStatusCode)

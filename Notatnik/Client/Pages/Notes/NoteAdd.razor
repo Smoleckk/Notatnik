@@ -7,7 +7,6 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 @attribute [Authorize]
-@*<RadzenButton Click=@Clear Text="Add new note" ButtonStyle="ButtonStyle.Dark" />*@
 
 <div class="container-fluid">
     <div class="row px-3">
@@ -40,7 +39,6 @@
                     <RadzenHtmlEditorFormatBlock />
 
                 </RadzenHtmlEditor>
-                @*<RadzenHtmlEditor @bind-Value=@value />*@
                 <button type="submit" class="btn btn-primary">Dodaj notatke</button>
                 <div class="text-danger">
                     <span>@errorMessage</span>
@@ -51,21 +49,6 @@
 </div>
 
 @code {
-    //string value = @"123";
-    //void OnPaste(HtmlEditorPasteEventArgs args)
-    //{
-    //    Console.WriteLine($"Paste: {args.Html}");
-    //}
-
-    //void OnChange(string html)
-    //{
-    //    Console.WriteLine($"Change: {html}");
-    //}
-
-    //void OnExecute(HtmlEditorExecuteEventArgs args)
-    //{
-    //    Console.WriteLine($"Execute: {args.CommandName}");
-    //}
     NoteDto noteDto = new NoteDto
         {
             Secure = false,
@@ -84,12 +67,10 @@
                 Public = false,
                 Password = "dummydefaultpass"
             };
-        Console.WriteLine(noteDto.Body);
 
         if (!result.IsSuccessStatusCode)
         {
             errorMessage = await result.Content.ReadAsStringAsync();
-            Console.WriteLine($"There was an error! {errorMessage}");
             return;
         }
 
@@ -97,8 +78,5 @@
 
 
     }
-
-
-
 
 }

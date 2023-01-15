@@ -65,11 +65,11 @@ using (var scope = app.Services.CreateScope())
         context.Database.Migrate();
     }
 }
-app.UseSwaggerUI(options =>
-{
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = string.Empty;
-});
+//app.UseSwaggerUI(options =>
+//{
+//    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+//    options.RoutePrefix = string.Empty;
+//});
 if (app.Environment.IsDevelopment())
 {
     //app.UseSwagger();
@@ -97,7 +97,7 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
-app.MapFallbackToFile("index.html");
+app.MapFallbackToFile("login");
 
 
 
