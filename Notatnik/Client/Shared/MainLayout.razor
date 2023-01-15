@@ -7,9 +7,14 @@
             </div>
 
             <main>
-                <div class="top-row px-4">
+                <div class="d-flex px-4">
                     <LoginLogoutButton />
-                    <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+                    <NavLink class="nav-link" href="/notes" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true"></span> Notes
+                    </NavLink>
+                    <NavLink class="nav-link" href="/public-notes" Match="NavLinkMatch.All">
+                        <span class="oi oi-home" aria-hidden="true"></span> Public Notes
+                    </NavLink>
                 </div>
 
                 <article class="content px-4">

@@ -33,6 +33,9 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
+//builder.WebHost.UseKestrel(option => option.AddServerHeader = false);
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INoteService, NoteService>();

@@ -20,6 +20,7 @@ namespace Notatnik.Shared.Dtos.NoteDto
         public bool Public { get; set; } = false;
         [Required]
         [RegularExpression(@"^[a-zA-Z0-9_.]*$", ErrorMessage = "Allowed only leters, numbers and _ .")]
+        [ValidPass]
         public string Password { get; set; } = string.Empty;
 
     }

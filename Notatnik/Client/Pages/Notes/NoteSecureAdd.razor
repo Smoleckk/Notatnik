@@ -18,6 +18,11 @@
                     <InputText id="title" @bind-Value="noteDto.Title" class="form-control" />
                     <ValidationMessage For="@(() => noteDto.Title)" />
                 </div>
+                <div class="mb-3">
+                    <label for="password">Podaj haslo notatki</label>
+                    <InputText type="password" id="password" @bind-Value="noteDto.Password" class="form-control" />
+                    <ValidationMessage For="@(() => noteDto.Password)" />
+                </div>
                 <label for="title">Podaj ciało notatki</label>
                 <RadzenHtmlEditor @bind-Value=@noteDto.Body style="height: 500px; margin-bottom: 1rem;">
                     <RadzenHtmlEditorUndo />
@@ -32,11 +37,7 @@
                     <RadzenHtmlEditorBackground />
                     <RadzenHtmlEditorRemoveFormat />
                 </RadzenHtmlEditor>
-                <div class="mb-3">
-                    <label for="password">Podaj haslo notatki</label>
-                    <InputText id="password" @bind-Value="noteDto.Password" class="form-control" />
-                    <ValidationMessage For="@(() => noteDto.Password)" />
-                </div>
+
                 <button type="submit" class="btn btn-primary">Dodaj zaszyfrowana notatke</button>
                 <div class="text-danger">
                     <span>@errorMessage</span>

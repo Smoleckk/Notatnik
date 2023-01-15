@@ -12,10 +12,14 @@
 {
     @foreach (var n in notes)
     {
-        <RadzenCard>
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@n.Title</RadzenText>
-            <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">@(((MarkupString)n.Body))</RadzenText>
-            </RadzenCard>
+        <div style="display: flex; justify-content: center; align-items: center; ">
+            <RadzenCard Style="width:60%; background-color:antiquewhite; margin-bottom:20px">
+                <RadzenText TextStyle="TextStyle.H3">@n.Title</RadzenText>
+                <hr style="border: none; background-color: rgba(0,0,10,1); height: 2px; margin: 1rem 0;" />
+
+                <RadzenText TextStyle="TextStyle.H5">@(((MarkupString)n.Body))</RadzenText>
+                </RadzenCard>
+            </div>
     }
 
 }
