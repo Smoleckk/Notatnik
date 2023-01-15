@@ -31,7 +31,6 @@ namespace Notatnik.Server.Services.UserService
 
             if (noteDto.Secure)
             {
-                //note.Body = EncryptDecryptManager.Encrypt(noteDto.Body);
                 note.Body = EncryptDecryptGCM.Encrypt(noteDto.Body);
 
                 note.Secure = noteDto.Secure;
@@ -74,14 +73,6 @@ namespace Notatnik.Server.Services.UserService
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            }
-        }
-        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computeHash.SequenceEqual(passwordHash);
             }
         }
     }

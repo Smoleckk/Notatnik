@@ -44,14 +44,11 @@ namespace Notatnik.Server.Services.AuthService
                 response.Data = request;
                 return response;
             }
-            //CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
             HashPasword(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             user.Email = request.Email;
             user.Username = request.Username;
             user.VerificationToken = Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-            //user.PasswordHash = passwordHash;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.Notes = new List<Note>();
@@ -94,7 +91,6 @@ namespace Notatnik.Server.Services.AuthService
             }
 
 
-            //if (!VerifyPasswordHash(request.Password, user.PasswordHash, user.PasswordSalt))
             if (!VerifyPassword(request.Password, user.PasswordHash, user.PasswordSalt))
             {
                 response.Success = false;

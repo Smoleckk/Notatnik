@@ -17,7 +17,6 @@ namespace Notatnik.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[ValidateAntiForgeryToken]
 
     public class AuthController : ControllerBase
     {
@@ -59,16 +58,5 @@ namespace Notatnik.Server.Controllers
 
             return Ok(response.Data);
         }
-        //[HttpPost("verify")]
-        //public async Task<ActionResult<ServiceResponse<string>>> Verify(string token)
-        //{
-        //    var response = await _authService.Verify(token);
-        //    if (!response.Success)
-        //    {
-        //        return BadRequest("Bad Credentials");
-        //    }
-
-        //    return Ok(response.Data);
-        //}
     }
 }

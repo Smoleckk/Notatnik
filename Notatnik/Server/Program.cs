@@ -34,8 +34,6 @@ builder.Services.AddSwaggerGen(options =>
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
-//builder.WebHost.UseKestrel(option => option.AddServerHeader = false);
-
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INoteService, NoteService>();
@@ -74,17 +72,18 @@ app.UseSwaggerUI(options =>
 });
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwagger();
+    //app.UseSwaggerUI();
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
 }
 else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
-//hrrps
+
 app.UseHttpsRedirection();
-//.NET Content Security Policy
 
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
